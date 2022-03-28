@@ -1,6 +1,6 @@
 
-import time
-from turtle import heading     # this library contains the sleep (delay) function
+import time # this library contains the sleep (delay) function
+from turtle import heading  #no idea what this does or why its here   
 import brickpi3 # import BrickPi3 library
 import grovepi  # import GrovePi library
 import vectors_v as IMU      # import custom IMU/vector math functions
@@ -17,7 +17,7 @@ motorR = BP.PORT_B
 wheelCirc = 14.13675 # cm
 turnPower = 50 # dps of wheels
 
-try: dT = dT
+try: dT = dT #try to use dT defined in main if this was called from main
 except: dT = 0.25
 
 # DRIVING FUNCTIONS
@@ -32,15 +32,15 @@ def driveSpeed (speed, turn): #drive at the desired speed (cm/s), turn is a fact
     BP.set_motor_dps(motorR, dps - (dps * turn))
     return
 
-def drivePower (power, turn):
+def drivePower (power, turn): #using wheel power
     BP.set_motor_power(motorL, power + (power * turn))
     BP.set_motor_power(motorR, power - (power * turn))
     return
 
-def turn (deg):
+def turn (deg): # truns the desired amount of degrees, angle tracking based on IMU angular data
     t0 = time.time()
     drive(0, IMU.sign(deg) * turnPower)
-    IMU.angle = {
+    IMU.angle = { # set initial angle to 0
     "x": 0,
     "y": 0,
     "z": 0}
@@ -59,12 +59,12 @@ def driveDistance(distance, speed): # drives distance in whichever direction it 
     p0 = IMU.pos.copy() # copy or else the reference the same object and change together
     distTravelled = 0
     try: heading = heading # inherit heading from main if it exists
-    except: heading = 0
-
+    except: heading = 0 # I should add a better exception here
     
     t0 = time.time()
     driveSpeed(speed, 0)
-    try:
+
+    try: # keyboard interrupt so it can stop 
         while distTravelled < distance: # while delta pos < distance
             rdT = time.time() - t0
             print("p0: {}, dx: {}".format(p0, distTravelled))
@@ -79,8 +79,8 @@ def driveDistance(distance, speed): # drives distance in whichever direction it 
 def driveToPoint(x, y):
     # on start forward is y+, right is x+
     # distance units = cm, speed = cm/s
-    speed = 15 # maybe move this elsewhere/inherit
-    heading = 0
+    speed = 15 # maybe move this elsewhere/inherit from main
+    heading = 0 #0 = y+, +clockwise
 
     if (y < 0):
         turn(180)
@@ -90,7 +90,7 @@ def driveToPoint(x, y):
 
     time.sleep(1)
     turn(90 * IMU.sign(x))
-    heading += 90 * IMU.sign(x)
+    heading += 90 * IMU.sign(x) #track current heading
     
     driveDistance(abs(x), speed) # drives distance and updates pos
 
@@ -101,7 +101,7 @@ def end (): #resets stuff/stops wheels
     print("program ended")
     return
 
-def driveStop(): #for the speed challenge
+def driveStop(): #for the speed challenge (semester 1)
     speed = int(input("Input speed in cm/s: "))
     driveSpeed(speed, 0)
     while True:
@@ -111,11 +111,11 @@ def driveStop(): #for the speed challenge
     drive(0,0)
     return
 
-# DISTANCE TRACKING
+# DISTANCE TRACKING (all vector update functions moved to vectors.py)
 
 
 
-# DRIVE LOOPS FOR EASY TESTING
+# DRIVE LOOPS FOR EASY TESTING (good for testing speeds/turning, can stop w/ctrl+c and change speed/trun. ctrl+c twice to end)
 def driveLoop(): #dps
     while True:
         try:
