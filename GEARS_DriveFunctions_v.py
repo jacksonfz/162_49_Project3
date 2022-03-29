@@ -14,7 +14,7 @@ motorL = BP.PORT_C
 motorR = BP.PORT_B
 
 # OTHER DEFINITIONS
-wheelCirc = 14.13675 # cm
+wheelCirc = 16.4 # cm
 turnPower = 50 # dps of wheels
 
 try: dT = dT
@@ -53,47 +53,68 @@ def turn (deg):
     drive(0,0)
     print("done turning")
 
-def driveDistance(distance, speed): # drives distance in whichever direction it is facing and tracks pos
+def turnTime (deg):
+    const = 0.0775
+    t0 = time.time()
+    drive(0, IMU.sign(deg) * turnPower)
+    timeStop = const * abs(deg)
+    if IMU.sign(deg) > 0:
+        print('turning right...')
+    elif IMU.sign(deg) < 0:
+        print('turning left...')
+    while time.time() - t0 <= timeStop:
+        time.sleep(dT)
+    drive(0, 0)
+    print('done turning')
+
+def driveDistance(distance, speed, heading): # drives distance in whichever direction it is facing and tracks pos
     # can correctly update pos on angles
     # pos y+ is default forward, x+ is right
     p0 = IMU.pos.copy() # copy or else the reference the same object and change together
     distTravelled = 0
-    try: heading = heading # inherit heading from main if it exists
-    except: heading = 0
-
     
     t0 = time.time()
     driveSpeed(speed, 0)
     try:
         while distTravelled < distance: # while delta pos < distance
             rdT = time.time() - t0
-            print("p0: {}, dx: {}".format(p0, distTravelled))
+            # print("p0: {}, dx: {}".format(p0, distTravelled))
             IMU.distanceUpdate(speed, rdT, heading)
             t0 = time.time()
             time.sleep(dT)
             distTravelled = IMU.length(IMU.add(IMU.pos, IMU.scale(p0, -1)))
+        print(heading)
     except KeyboardInterrupt:
         drive(0,0)
     drive(0, 0)
         
-def driveToPoint(x, y):
+def driveToPoint(x, y, heading):
     # on start forward is y+, right is x+
     # distance units = cm, speed = cm/s
     speed = 15 # maybe move this elsewhere/inherit
-    heading = 0
 
     if (y < 0):
-        turn(180)
+        turnTime(180)
         heading = 180
 
-    driveDistance(abs(y), speed) # drives distance and updates pos
+    driveDistance(abs(y), speed, heading) # drives distance and updates pos
 
     time.sleep(1)
-    turn(90 * IMU.sign(x))
+    turnTime(90 * IMU.sign(x))
     heading += 90 * IMU.sign(x)
     
-    driveDistance(abs(x), speed) # drives distance and updates pos
+    driveDistance(abs(x), speed, heading) # drives distance and updates pos
+    return heading
 
+def driveToPoints(points):
+    heading = 0
+    for i in range(0, int(len(points)), 2):
+        x = points[i]
+        y = points[i + 1]
+        posIn = IMU.pos.copy()
+        print(x - posIn['x'], y - posIn['y'])
+        heading = driveToPoint(x - posIn['x'], y - posIn['y'], heading)
+        print('driveToPoint iteration')
 
 
 def end (): #resets stuff/stops wheels

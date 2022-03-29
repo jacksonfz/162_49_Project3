@@ -10,7 +10,7 @@ import sys
 import time
 from math import sqrt, sin, cos, pi
 mpu9250 = MPU9250()
-# SETTING VARS 
+# SETTING VARS
 wallCalibration = 10 # ultrasonic units
 
 #%% SENSOR FUNCTIONS
@@ -123,9 +123,11 @@ pos = {
     "y": 0,
     "z": 0}
 def distanceUpdate(speed, timeStep, heading):
-    pos["x"] += timeStep * speed * cos(heading * pi / 2) 
-    pos["y"] += timeStep * speed * sin(heading * pi / 2)
-    printVec(pos)
+    pos["x"] += timeStep * speed * round(sin(heading * pi / 180), 3)
+    pos["y"] += timeStep * speed * round(cos(heading * pi / 180), 3)
+    # printVec(pos)
+    print("pos: {}, heading: {}".format(pos, heading))
+    print(sin(heading * pi / 180), cos(heading * pi / 180))
 
 #%% OTHER SENSOR FUNCTIONS
 wall = [0,0,0]
