@@ -127,7 +127,6 @@ def distanceUpdate(speed, timeStep, heading):
     pos["y"] += timeStep * speed * round(cos(heading * pi / 180), 3)
     # printVec(pos)
     print("pos: {}, heading: {}".format(pos, heading))
-    print(sin(heading * pi / 180), cos(heading * pi / 180))
 
 #%% OTHER SENSOR FUNCTIONS
 wall = [0,0,0]

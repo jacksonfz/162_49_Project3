@@ -28,8 +28,10 @@ heading = 180
 
 print("starting loop")
 try:
-    d.driveToPoints([-20, 20, 0, 0])
-
+    d.turnTime(-90)
+    d.driveToPoints([80, 0, 80, 80, 120, 80, 120, 0])
+    #d.driveSpeedLoop()
+    
 except KeyboardInterrupt:
         d.drive(0,0)
         d.end()

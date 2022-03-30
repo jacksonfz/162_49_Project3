@@ -70,11 +70,12 @@ def turnTime (deg):
 def driveDistance(distance, speed, heading): # drives distance in whichever direction it is facing and tracks pos
     # can correctly update pos on angles
     # pos y+ is default forward, x+ is right
+    correction = -0.017
     p0 = IMU.pos.copy() # copy or else the reference the same object and change together
     distTravelled = 0
     
     t0 = time.time()
-    driveSpeed(speed, 0)
+    driveSpeed(speed, correction)
     try:
         while distTravelled < distance: # while delta pos < distance
             rdT = time.time() - t0
@@ -93,27 +94,55 @@ def driveToPoint(x, y, heading):
     # distance units = cm, speed = cm/s
     speed = 15 # maybe move this elsewhere/inherit
 
-    if (y < 0):
-        turnTime(180)
-        heading = 180
+    if IMU.sign(y) < 0:
+        targetHeading = 180
+    elif IMU.sign(y) > 0:
+        targetHeading = 0
+    else:
+        targetHeading = heading
+
+    print("target heading: ", targetHeading)
+    turnTime(targetHeading - heading)
+    heading = targetHeading
+        
+    # turnTime(90 - (90 * IMU.sign(y)))
+    #heading += (90 - (90 * IMU.sign(y)))
 
     driveDistance(abs(y), speed, heading) # drives distance and updates pos
 
     time.sleep(1)
-    turnTime(90 * IMU.sign(x))
-    heading += 90 * IMU.sign(x)
+
+    
+    if IMU.sign(x) < 0:
+        targetHeading = -90
+    elif IMU.sign(x) > 0:
+        targetHeading = 90
+    else:
+        targetHeading = heading
+
+    print("target heading: ", targetHeading)
+    turnTime(targetHeading - heading)
+    heading = targetHeading
+
+       
+    # turnTime(90 * IMU.sign(x))
+    # heading += 90 * IMU.sign(x)
     
     driveDistance(abs(x), speed, heading) # drives distance and updates pos
     return heading
 
 def driveToPoints(points):
     heading = 0
+    #gridSize = 40
+    #points *= gridSize
+    
     for i in range(0, int(len(points)), 2):
         x = points[i]
         y = points[i + 1]
         posIn = IMU.pos.copy()
-        print(x - posIn['x'], y - posIn['y'])
+        print('absolute: {}, {} relative: {}, {}'.format(x, y, x - posIn['x'], y - posIn['y']))
         heading = driveToPoint(x - posIn['x'], y - posIn['y'], heading)
+        variable = input('Press any button, then enter...')
         print('driveToPoint iteration')
 
 
