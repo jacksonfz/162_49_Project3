@@ -115,7 +115,7 @@ def angleUpdate(time):
     angle["x"] += time * gyroData["x"]
     angle["y"] += time * gyroData["y"]
     angle["z"] += time * gyroData["z"]
-    printVec(angle)
+    # printVec(angle)
 
 # DISTANCE TRACKING (from speed, to be used in loops)
 pos = {

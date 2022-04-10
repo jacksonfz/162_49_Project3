@@ -18,7 +18,7 @@ wheelCirc = 16.4 # cm
 turnPower = 50 # dps of wheels
 
 try: dT = dT
-except: dT = 0.25
+except: dT = 0.1
 
 # DRIVING FUNCTIONS
 def drive (dps, turn): #makes the wheels go at a desired dps
@@ -36,6 +36,45 @@ def drivePower (power, turn):
     BP.set_motor_power(motorL, power + (power * turn))
     BP.set_motor_power(motorR, power - (power * turn))
     return
+
+def driveWalls (speed):
+    dps = -1 * speed * 360 / wheelCirc
+    leftPort = 2
+    rightPort = 4
+    coefProp = 0.02
+    coefInt = 0
+    integral = 0
+    derivative = 0.01
+    coefDer = 0
+    error0 = 0
+    
+    try:
+        while True:
+            IMU.angleUpdate(dT)
+            turn = IMU.sign(IMU.angle['z']) * IMU.length(IMU.angle)
+            print(turn)
+            
+            
+            leftD = grovepi.ultrasonicRead(leftPort)
+            rightD = grovepi.ultrasonicRead(rightPort)
+            error = leftD - rightD
+            integral += dT * error
+            derivative = (error - error0) / dT
+            error0 = error
+
+            correction = error * coefProp + integral * coefInt + derivative * coefDer
+            BP.set_motor_dps(motorL, dps * (1 + (correction)))
+            BP.set_motor_dps(motorR, dps * (1 - (correction)))
+
+            # print("PID: {}, {}, {}, correction: {})".format(error * coefProp, integral, derivative, correction))
+
+            time.sleep(dT)
+            
+    except KeyboardInterrupt:
+        drive(0, 0)
+        
+    return
+        
 
 def turn (deg):
     t0 = time.time()
@@ -56,15 +95,24 @@ def turn (deg):
 def turnTime (deg):
     const = 0.0775
     t0 = time.time()
+    t1 = time.time()
     drive(0, IMU.sign(deg) * turnPower)
     timeStop = const * abs(deg)
+    turn = 0
     if IMU.sign(deg) > 0:
         print('turning right...')
     elif IMU.sign(deg) < 0:
         print('turning left...')
-    while time.time() - t0 <= timeStop:
+    while abs(turn) <= abs(deg):
         time.sleep(dT)
+        turn = IMU.sign(IMU.angle['z']) * IMU.length(IMU.angle)
+        
+        rdt = time.time() - t1
+        IMU.angleUpdate(rdt)
+        t1 = time.time()
+        
     drive(0, 0)
+    print(turn)
     print('done turning')
 
 def driveDistance(distance, speed, heading): # drives distance in whichever direction it is facing and tracks pos
