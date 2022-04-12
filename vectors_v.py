@@ -8,8 +8,13 @@ except: print("IMU setup error")
 
 import sys 
 import time
-from math import sqrt, sin, cos, pi
+from math import sqrt, sin, cos, pi, acos
 mpu9250 = MPU9250()
+
+# for wall sensing
+import brickpi3 # import BrickPi3 library
+import grovepi  # import GrovePi library
+
 # SETTING VARS
 wallCalibration = 10 # ultrasonic units
 
@@ -138,4 +143,20 @@ def detectWall(sensorData):
             wall[i] = False
     return wall
 
+
+# Wall setup stuff
+
+ultrasonicCalibration = 1 # fix this
+sensorOffset = 5 # distance from CoM in cm
+prevOffset = 0 # store for derivative
+
+def wallPos(leftPort, rightPort, hallWidth):
+    s1 = grovepi.ultrasonicRead(leftPort) * ultrasonicCalibration # left side sensor distance 
+    s2 = grovepi.ultrasonicRead(rightPort) * ultrasonicCalibration # right side sesnor distance
+    offset = (s1 - s2) * hallWidth / (s1 + s2 + 2 * sensorOffset) # distance in cm from center, - is left
+    direction = sign(offset - prevOffset) # for angle sign, check noise
+    prevoffset = offset # update prev value
+    theta = 180 / pi * acos(hallWidth /(s1 + s2 + 2 * sensorOffset)) * direction # angle of the robot relative to walls, + is clockwise
+
+    return(offset, theta)
 
