@@ -24,7 +24,6 @@ import vectors_v as IMU      # import custom IMU/vector math functions
 # except: dT = 0.1
 
 turnPower = 50 # dps of wheels
-stopDistance = 10 # not used?
 
 # DRIVING FUNCTIONS
 def drive (dps, turn): #makes the wheels go at a desired dps
@@ -82,7 +81,7 @@ def driveWalls (speed):
     return
         
 
-def turn (deg):
+def turn (deg): # based on IMU data
     t0 = time.time()
     drive(0, IMU.sign(deg) * turnPower)
     IMU.angle = {
@@ -98,7 +97,7 @@ def turn (deg):
     drive(0,0)
     print("done turning")
 
-def turnTime (deg):
+def turnTime (deg): # time based turning
     const = 0.0775
     t0 = time.time()
     t1 = time.time()
@@ -199,28 +198,25 @@ def driveToPoints(points):
         variable = input('Press any button, then enter...')
         print('driveToPoint iteration')
 
+# Idea: put all sensor updates into a single function that updates all values in an object that can be referenced by all functions
+#       and update it every loop iteration. Will allow for faster loop runtime
 def followWalls(): # this goes inside a while loop
-    IMU.wallPos()
+    offset, angle, gap = IMU.wallPos()
+    if gap: # probably a turn hallway, wallPos data can't be trusted
+        #do turn stuff
+        turnTime(90)
+    elif (offset > centerOffsetThreshold) or (angle > angleOffsetThreshold): # robot needs to correct
+        turnCorrection = -0.02 * offset
+    else: 
+        turnCorrection = 0
+    driveSpeed(speed, turnCorrection)
+
 
 
 def end (): #resets stuff/stops wheels
     BP.reset_all()        # Unconfigure the sensors, disable the motors, and restore the LED to the control of the BrickPi3 firmware.
     print("program ended")
     return
-
-def driveStop(): #for the speed challenge
-    speed = int(input("Input speed in cm/s: "))
-    driveSpeed(speed, 0)
-    while True:
-        sonarData = grovepi.ultrasonicRead(sonarPort1)
-        if sonarData > stopDistance:
-            break
-    drive(0,0)
-    return
-
-# DISTANCE TRACKING
-
-
 
 # DRIVE LOOPS FOR EASY TESTING
 def driveLoop(): #dps

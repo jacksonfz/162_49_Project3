@@ -35,17 +35,10 @@ import GEARS_DriveFunctions_v as d # import drive control functions
 print("starting loop")
 try:
     while True:
-        ultrasonicData = [grovepi.ultrasonicRead(sonarPort1), grovepi.ultrasonicRead(sonarPort2), grovepi.ultrasonicRead(sonarPort3)]
+        ultrasonicData = IMU.sensorUpdate()
         
         walls = IMU.detectWall(ultrasonicData)
-        print("wall: {}, data: {}".format(walls, ultrasonicData))
-        if walls[2] == 0: #if there is a not wall to the right
-            d.turn(90)
-        elif walls[1] == 1: #if there is a wall center and right
-            d.turn(-90)
-        else: 
-            d.driveSpeed(10,0) #go straight
-
+        d.followWalls()
         time.sleep(dT)
 
 except KeyboardInterrupt:

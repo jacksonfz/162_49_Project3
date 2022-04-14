@@ -137,9 +137,16 @@ def distanceUpdate(speed, timeStep, heading):
     print("pos: {}, heading: {}".format(pos, heading))
 
 #%% OTHER SENSOR FUNCTIONS
-wall = [0,0,0]
+
+def sensorUpdate():
+    s1 = grovepi.ultrasonicRead(sonarPort1) * ultrasonicCalibration # left side sensor distance 
+    s2 = grovepi.ultrasonicRead(sonarPort2) * ultrasonicCalibration # center sesnor distance
+    s3 = grovepi.ultrasonicRead(sonarPort3) * ultrasonicCalibration # right side sesnor distance
+    return(0, s1, s2, s3) #first spot isn't used for easy indexing
+
+wall = [0,0,0,0] #first spot isn't used for easy indexing
 def detectWall(sensorData):
-    for i in range(0,2): # for 3 walls (l, c ,r)
+    for i in range(1,3): # for 3 walls (0, l, c ,r)
         if sensorData[i] < wallCalibration:
             wall[i] = True
         else:
@@ -149,8 +156,6 @@ def detectWall(sensorData):
 
 # WallPos setup stuff
 
-ultrasonicCalibration = 1.2 # fix this
-sensorOffset = 22.5 / 2 # distance from CoM in cm
 prevOffset = 0 # store for derivative
 s1Prev = 0 # storage for hallway detection
 s2Prev = 0
@@ -159,11 +164,13 @@ errorThreshold = 10 # if delta s > this readings are assumed to be wrong because
 
 wallPosStorage = [prevOffset, s1Prev, s2Prev] # passing things to be updated just works better in a list idk
 
-def wallPos(leftPort, rightPort, hallWidth):
+def wallPos(sensorData):
     
-    # Get sensor data and convert to cm
-    s1 = grovepi.ultrasonicRead(leftPort) * ultrasonicCalibration # left side sensor distance 
-    s2 = grovepi.ultrasonicRead(rightPort) * ultrasonicCalibration # right side sesnor distance
+    # # Get sensor data and convert to cm
+    # s1 = grovepi.ultrasonicRead(sonarPort1) * ultrasonicCalibration # left side sensor distance 
+    # s2 = grovepi.ultrasonicRead(sonarPort3) * ultrasonicCalibration # right side sesnor distance
+    s1 = sensorData[1]
+    s2 = sensorData[3] # s2 = sensor 3 = right 
 
     # check for side hallways
         # NOTE FOR LATER: Return sensor values or way to override error if very close to wall
@@ -179,7 +186,8 @@ def wallPos(leftPort, rightPort, hallWidth):
     try:
         theta = 180 / pi * acos(hallWidth /(s1 + s2 + 2 * sensorOffset)) #* direction # angle of the robot relative to walls, + is clockwise
     except ValueError:
-        theta = 360
+        theta = float("NAN")
+        error = 1
     
 
     # debug printing
@@ -187,8 +195,10 @@ def wallPos(leftPort, rightPort, hallWidth):
     print("s1: {0:5.1f}cm, s2: {1:5.1f}cm, offset: {2:5.1f}cm, angle: {3:5.3f}, width: {5:4.1f}, error: {4}".format(s1, s2, offset, theta, error, ow))
 
 
-    return(offset, theta, error)
+    return(offset, theta, bool(error))
 
+#%%
+# Run for testing 
 print("loop")
 while True:
     wallPos(2, 4, 57)
