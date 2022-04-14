@@ -8,8 +8,13 @@ except: print("IMU setup error")
 
 import sys 
 import time
-from math import sqrt, sin, cos, pi
+from math import sqrt, sin, cos, pi, acos
 mpu9250 = MPU9250()
+
+# for wall sensing
+import brickpi3 # import BrickPi3 library
+import grovepi  # import GrovePi library
+
 # SETTING VARS
 wallCalibration = 10 # ultrasonic units
 
@@ -139,3 +144,51 @@ def detectWall(sensorData):
     return wall
 
 
+# WallPos setup stuff
+
+ultrasonicCalibration = 1.2 # fix this
+sensorOffset = 22.5 / 2 # distance from CoM in cm
+prevOffset = 0 # store for derivative
+s1Prev = 0 # storage for hallway detection
+s2Prev = 0
+errorThreshold = 10 # if delta s > this readings are assumed to be wrong because of a right/left hallway
+# hallWidth = 57 # cm, maybe move back to args
+
+wallPosStorage = [prevOffset, s1Prev, s2Prev] # passing things to be updated just works better in a list idk
+
+def wallPos(leftPort, rightPort, hallWidth):
+    
+    # Get sensor data and convert to cm
+    s1 = grovepi.ultrasonicRead(leftPort) * ultrasonicCalibration # left side sensor distance 
+    s2 = grovepi.ultrasonicRead(rightPort) * ultrasonicCalibration # right side sesnor distance
+
+    # check for side hallways
+        # NOTE FOR LATER: Return sensor values or way to override error if very close to wall
+    if abs(s1 - wallPosStorage[1]) > errorThreshold or abs(s2 - wallPosStorage[2]) > errorThreshold: error = 1 
+    else: error = 0
+    wallPosStorage[1] = s1
+    wallPosStorage[2] = s2
+    
+    # calculate stuff
+    offset = (s1 - s2) * hallWidth / (s1 + s2 + 2 * sensorOffset) # distance in cm from center, - is left
+    direction = sign(offset - wallPosStorage[0]) # for angle sign, watch for noise
+    wallPosStorage[0] = offset # update prev value
+    try:
+        theta = 180 / pi * acos(hallWidth /(s1 + s2 + 2 * sensorOffset)) #* direction # angle of the robot relative to walls, + is clockwise
+    except ValueError:
+        theta = 360
+    
+
+    # debug printing
+    ow = s1 + s2 + sensorOffset * 2
+    print("s1: {0:5.1f}cm, s2: {1:5.1f}cm, offset: {2:5.1f}cm, angle: {3:5.3f}, width: {5:4.1f}, error: {4}".format(s1, s2, offset, theta, error, ow))
+
+
+    return(offset, theta, error)
+
+print("loop")
+while True:
+    wallPos(2, 4, 57)
+    time.sleep(1)
+
+    
