@@ -1,24 +1,30 @@
+from GEARS_Setup import *   # put all the settings in one place
 
-import time
-from turtle import heading     # this library contains the sleep (delay) function
-import brickpi3 # import BrickPi3 library
-import grovepi  # import GrovePi library
 import vectors_v as IMU      # import custom IMU/vector math functions
 
+# Redundant imports: 
 
-# SETUP SENSORS AND MOTORS
-BP = brickpi3.BrickPi3() #initialize birckpi
+# import time
+# from turtle import heading     # this library contains the sleep (delay) function
+# import brickpi3 # import BrickPi3 library
+# import grovepi  # import GrovePi library
 
-# PORT DEFINITIONS
-motorL = BP.PORT_C
-motorR = BP.PORT_B
 
-# OTHER DEFINITIONS
-wheelCirc = 16.4 # cm
+# # SETUP SENSORS AND MOTORS
+# BP = brickpi3.BrickPi3() #initialize birckpi
+
+# # PORT DEFINITIONS
+# motorL = BP.PORT_C
+# motorR = BP.PORT_B
+
+# # OTHER DEFINITIONS
+# wheelCirc = 16.4 # cm
+
+# try: dT = dT
+# except: dT = 0.1
+
 turnPower = 50 # dps of wheels
-
-try: dT = dT
-except: dT = 0.1
+stopDistance = 10 # not used?
 
 # DRIVING FUNCTIONS
 def drive (dps, turn): #makes the wheels go at a desired dps
@@ -193,6 +199,9 @@ def driveToPoints(points):
         variable = input('Press any button, then enter...')
         print('driveToPoint iteration')
 
+def followWalls(): # this goes inside a while loop
+    IMU.wallPos()
+
 
 def end (): #resets stuff/stops wheels
     BP.reset_all()        # Unconfigure the sensors, disable the motors, and restore the LED to the control of the BrickPi3 firmware.
@@ -203,7 +212,7 @@ def driveStop(): #for the speed challenge
     speed = int(input("Input speed in cm/s: "))
     driveSpeed(speed, 0)
     while True:
-        sonarData = grovepi.ultrasonicRead(sonar1)
+        sonarData = grovepi.ultrasonicRead(sonarPort1)
         if sonarData > stopDistance:
             break
     drive(0,0)

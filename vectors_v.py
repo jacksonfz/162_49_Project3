@@ -3,17 +3,20 @@
 NOTES
     don't import individual functions it won't work
 """
-try: from MPU9250 import MPU9250
-except: print("IMU setup error")
 
-import sys 
-import time
+from GEARS_Setup import *   # put all the settings in one place
+
+from MPU9250 import MPU9250
 from math import sqrt, sin, cos, pi, acos
 mpu9250 = MPU9250()
 
-# for wall sensing
-import brickpi3 # import BrickPi3 library
-import grovepi  # import GrovePi library
+# # REDUNDANT IMPORTS
+# import sys 
+# import time
+
+# # for wall sensing
+# import brickpi3 # import BrickPi3 library
+# import grovepi  # import GrovePi library
 
 # SETTING VARS
 wallCalibration = 10 # ultrasonic units
