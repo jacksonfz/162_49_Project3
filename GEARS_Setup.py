@@ -12,6 +12,7 @@ import time
 
 motorL = BP.PORT_C
 motorR = BP.PORT_B
+motorC = BP.PORT_A
 # wheelCirc = 14.13675 # idk which of these is right
 wheelCirc = 16.4 # cm
 
@@ -24,14 +25,26 @@ sonarPort3 = 4 # right
 #SETTING VARS
 # global dT
 dT = 0.2
-centerOffsetThreshold = 10 # how far off center does robot need to be to react
+centerOffsetThreshold = 4 # how far off center does robot need to be to react
 angleOffsetThreshold = 25 # how far off center does robot need to be to react
 speed = 10 # cm/s
 
 # Ultrasonic Calibration
-ultrasonicCalibration = 1.2 # currently calibrated to my desk
-sensorOffset = 22.5 / 2 # distance from CoM in cm
-hallWidth = 57 # cm
+ultrasonicCalibration = 1.15 # currently calibrated to my desk
+sensorOffset = 25 / 2 # distance from CoM in cm
+hallWidth = 40 # cm
+wallCalibration = 20 # ultrasonic units
+
+def lockCargo():
+    zeroPositionA = BP.get_motor_encoder(motorC)
+    BP.offset_motor_encoder(motorC, zeroPositionA) # Set current position of motor A to 'zero' position.
+    BP.set_motor_position(motorC, 0) # turn wheel
+
+
+def dropCargo():
+    BP.set_motor_position(motorC, -60) # turn wheel
+
+
 
 # portConfig = {  # create a dictionary object with all the port configurations so all the functions can easily reference this
 #             # most of this info is taken from vars above so it's repetitive but whatever

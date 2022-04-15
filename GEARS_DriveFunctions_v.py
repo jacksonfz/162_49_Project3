@@ -104,13 +104,14 @@ def turnTime (deg): # time based turning
     drive(0, IMU.sign(deg) * turnPower)
     timeStop = const * abs(deg)
     turn = 0
+    a0 = IMU.angle['z']
     if IMU.sign(deg) > 0:
         print('turning right...')
     elif IMU.sign(deg) < 0:
         print('turning left...')
     while abs(turn) <= abs(deg):
         time.sleep(dT)
-        turn = IMU.sign(IMU.angle['z']) * IMU.length(IMU.angle)
+        turn = IMU.sign(IMU.angle['z']) * IMU.length(IMU.angle) - a0
         
         rdt = time.time() - t1
         IMU.angleUpdate(rdt)
@@ -200,13 +201,35 @@ def driveToPoints(points):
 
 # Idea: put all sensor updates into a single function that updates all values in an object that can be referenced by all functions
 #       and update it every loop iteration. Will allow for faster loop runtime
-def followWalls(): # this goes inside a while loop
-    offset, angle, gap = IMU.wallPos()
+def followWalls(sensorData): # this goes inside a while loop
+    offset, angle, gap = IMU.wallPos(sensorData)
     if gap: # probably a turn hallway, wallPos data can't be trusted
         #do turn stuff
-        turnTime(90)
-    elif (offset > centerOffsetThreshold) or (angle > angleOffsetThreshold): # robot needs to correct
-        turnCorrection = -0.02 * offset
+        #turnTime(90)
+        print("not turning")
+        #time.sleep(1)
+        walls = IMU.detectWall(sensorData)
+        print(walls)
+        if walls[3] == 0:
+            driveDistance(15, speed, 0)
+            drive(0,0)
+            turnTime(80)
+            time.sleep(dT)
+            sensorData = IMU.sensorUpdate()
+            walls = IMU.detectWall(sensorData)
+            if walls[2] == 0:
+                #driveSpeed(speed, 0)
+                driveDistance(30, speed, 90)
+                print("going straight")
+                #time.sleep(5)
+            else: print("THERES A WALL IN THE WAY")
+            IMU.angle = IMU.vec0()
+            print("reset angle")
+        elif walls[1] == 0: turnTime(-90)
+        turnCorrection = 0
+    elif (abs(offset) > centerOffsetThreshold) or (abs(angle) > angleOffsetThreshold): # robot needs to correct
+        turnCorrection = 0.05 * offset - 0.01 * IMU.angle["z"]
+        print("turning: ", turnCorrection)
     else: 
         turnCorrection = 0
     driveSpeed(speed, turnCorrection)

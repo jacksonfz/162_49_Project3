@@ -19,7 +19,6 @@ mpu9250 = MPU9250()
 # import grovepi  # import GrovePi library
 
 # SETTING VARS
-wallCalibration = 10 # ultrasonic units
 
 #%% SENSOR FUNCTIONS
 
@@ -146,7 +145,7 @@ def sensorUpdate():
 
 wall = [0,0,0,0] #first spot isn't used for easy indexing
 def detectWall(sensorData):
-    for i in range(1,3): # for 3 walls (0, l, c ,r)
+    for i in range(1,4): # for 3 walls (0, l, c ,r)
         if sensorData[i] < wallCalibration:
             wall[i] = True
         else:
@@ -174,7 +173,8 @@ def wallPos(sensorData):
 
     # check for side hallways
         # NOTE FOR LATER: Return sensor values or way to override error if very close to wall
-    if abs(s1 - wallPosStorage[1]) > errorThreshold or abs(s2 - wallPosStorage[2]) > errorThreshold: error = 1 
+    if abs(s1 - wallPosStorage[1]) > errorThreshold or abs(s2 - wallPosStorage[2]) > errorThreshold:
+        error = 1 
     else: error = 0
     wallPosStorage[1] = s1
     wallPosStorage[2] = s2
@@ -184,15 +184,15 @@ def wallPos(sensorData):
     direction = sign(offset - wallPosStorage[0]) # for angle sign, watch for noise
     wallPosStorage[0] = offset # update prev value
     try:
-        theta = 180 / pi * acos(hallWidth /(s1 + s2 + 2 * sensorOffset)) #* direction # angle of the robot relative to walls, + is clockwise
+        theta = 180 / pi * acos(hallWidth /(s1 + s2 + 2 * sensorOffset)) * direction # angle of the robot relative to walls, + is clockwise
     except ValueError:
-        theta = float("NAN")
-        error = 1
+        theta = 0 #float("NAN")
+        
     
 
     # debug printing
     ow = s1 + s2 + sensorOffset * 2
-    print("s1: {0:5.1f}cm, s2: {1:5.1f}cm, offset: {2:5.1f}cm, angle: {3:5.3f}, width: {5:4.1f}, error: {4}".format(s1, s2, offset, theta, error, ow))
+    print("s1: {0:5.1f}cm, s2: {1:5.1f}cm, offset: {2:5.1f}cm, WallAngle: {5:5.3f}, IMU: {6:4.1f} width: {5:4.1f}, error: {4}".format(s1, s2, offset, theta, error, ow, angle["z"]))
 
 
     return(offset, theta, bool(error))
@@ -200,8 +200,8 @@ def wallPos(sensorData):
 #%%
 # Run for testing 
 print("loop")
-while True:
-    wallPos(2, 4, 57)
-    time.sleep(1)
+#while True:
+ #   wallPos(2)
+  #  time.sleep(1)
 
     
