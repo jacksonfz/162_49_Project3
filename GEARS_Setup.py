@@ -15,6 +15,7 @@ motorR = BP.PORT_B
 motorC = BP.PORT_A
 # wheelCirc = 14.13675 # idk which of these is right
 wheelCirc = 16.4 # cm
+turnPower = 50 # dps of wheels, for turning functions
 
 # GROVE PORT VAR DEFINITIONS & INITIALIZATIONS
 # use digital port (D) for all
@@ -37,7 +38,8 @@ wallCalibration = 20 # ultrasonic units
 
 def lockCargo():
     zeroPositionA = BP.get_motor_encoder(motorC)
-    BP.offset_motor_encoder(motorC, zeroPositionA) # Set current position of motor A to 'zero' position.
+    BP.offset_motor_encoder(motorC, zeroPositionA) # Set current position of motor A to 'zero' position.
+
     BP.set_motor_position(motorC, 0) # turn wheel
 
 

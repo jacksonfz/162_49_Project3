@@ -2,28 +2,7 @@ from GEARS_Setup import *   # put all the settings in one place
 
 import vectors_v as IMU      # import custom IMU/vector math functions
 
-# Redundant imports: 
 
-# import time
-# from turtle import heading     # this library contains the sleep (delay) function
-# import brickpi3 # import BrickPi3 library
-# import grovepi  # import GrovePi library
-
-
-# # SETUP SENSORS AND MOTORS
-# BP = brickpi3.BrickPi3() #initialize birckpi
-
-# # PORT DEFINITIONS
-# motorL = BP.PORT_C
-# motorR = BP.PORT_B
-
-# # OTHER DEFINITIONS
-# wheelCirc = 16.4 # cm
-
-# try: dT = dT
-# except: dT = 0.1
-
-turnPower = 50 # dps of wheels
 
 # DRIVING FUNCTIONS
 def drive (dps, turn): #makes the wheels go at a desired dps

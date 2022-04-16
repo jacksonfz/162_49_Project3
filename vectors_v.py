@@ -10,16 +10,6 @@ from MPU9250 import MPU9250
 from math import sqrt, sin, cos, pi, acos
 mpu9250 = MPU9250()
 
-# # REDUNDANT IMPORTS
-# import sys 
-# import time
-
-# # for wall sensing
-# import brickpi3 # import BrickPi3 library
-# import grovepi  # import GrovePi library
-
-# SETTING VARS
-
 #%% SENSOR FUNCTIONS
 
 def accel(): #reads acceleration
@@ -197,9 +187,20 @@ def wallPos(sensorData):
 
     return(offset, theta, bool(error))
 
+
+# MAPPING FUNCTIONS
+
+def logMap(filename, mapNum):
+    fid = open(filename, "w") # add check if file exists so it doesn't overwrite
+    fid.write("Team: {} \nMap: {} \n Unit Length: {} \nUnit: {} \nOrigin: {} \nNotes{}".format)
+    fid.close()
+    return(fid)
+
+def updateMap(fid,)
+
 #%%
 # Run for testing 
-print("loop")
+# print("loop")
 #while True:
  #   wallPos(2)
   #  time.sleep(1)
