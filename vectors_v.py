@@ -7,7 +7,7 @@ NOTES
 from GEARS_Setup import *   # put all the settings in one place
 
 from MPU9250 import MPU9250
-from math import sqrt, sin, cos, pi, acos
+from math import sqrt, sin, cos, pi, acos, asin
 mpu9250 = MPU9250()
 
 #%% SENSOR FUNCTIONS
@@ -127,15 +127,15 @@ def distanceUpdate(speed, timeStep, heading):
 
 #%% OTHER SENSOR FUNCTIONS
 
-def sensorUpdate():
-    s1 = grovepi.ultrasonicRead(sonarPort1) * ultrasonicCalibration # left side sensor distance 
-    s2 = grovepi.ultrasonicRead(sonarPort2) * ultrasonicCalibration # center sesnor distance
-    s3 = grovepi.ultrasonicRead(sonarPort3) * ultrasonicCalibration # right side sesnor distance
-    return(0, s1, s2, s3) #first spot isn't used for easy indexing
+# def sensorUpdate(): # For 3 ultrasonic sensors
+#     s1 = grovepi.ultrasonicRead(sonarPort1) * ultrasonicCalibration # left side sensor distance 
+#     s2 = grovepi.ultrasonicRead(sonarPort2) * ultrasonicCalibration # center sesnor distance
+#     s3 = grovepi.ultrasonicRead(sonarPort3) * ultrasonicCalibration # right side sesnor distance
+#     return(0, s1, s2, s3) #first spot isn't used for easy indexing
 
 wall = [0,0,0,0] #first spot isn't used for easy indexing
 def detectWall(sensorData):
-    for i in range(1,4): # for 3 walls (0, l, c ,r)
+    for i in range(1,len(sensorData)): # for 3 walls (0, l, c ,r)
         if sensorData[i] < wallCalibration:
             wall[i] = True
         else:
@@ -153,7 +153,7 @@ errorThreshold = 10 # if delta s > this readings are assumed to be wrong because
 
 wallPosStorage = [prevOffset, s1Prev, s2Prev] # passing things to be updated just works better in a list idk
 
-def wallPos(sensorData):
+def wallPos(sensorData): # with 1 sensor on each size
     
     # # Get sensor data and convert to cm
     # s1 = grovepi.ultrasonicRead(sonarPort1) * ultrasonicCalibration # left side sensor distance 
@@ -182,21 +182,41 @@ def wallPos(sensorData):
 
     # debug printing
     ow = s1 + s2 + sensorOffset * 2
-    print("s1: {0:5.1f}cm, s2: {1:5.1f}cm, offset: {2:5.1f}cm, WallAngle: {5:5.3f}, IMU: {6:4.1f} width: {5:4.1f}, error: {4}".format(s1, s2, offset, theta, error, ow, angle["z"]))
+    print("s1: {0:5.1f}cm, s2: {1:5.1f}cm, offset: {2:5.1f}cm, WallAngle: {3:5.3f}, IMU: {6:4.1f} width: {5:4.1f}, error: {4}".format(s1, s2, offset, theta, error, ow, angle["z"]))
 
 
     return(offset, theta, bool(error))
 
+def updateWallSensors(): # for 5 sensors
+    sr1 = grovepi.ultrasonicRead(sonarPortR1) * ultrasonicCalibration # right side sensor 1distance 
+    sr2 = grovepi.ultrasonicRead(sonarPortR2) * ultrasonicCalibration # center sesnor distance
+    try: #left side is optional
+        sl1 = grovepi.ultrasonicRead(sonarPortL1) * ultrasonicCalibration # right side sesnor distance
+        sl2 = grovepi.ultrasonicRead(sonarPortL2) * ultrasonicCalibration # right side sesnor distance
+    except IOError:
+        sl1 = float("NAN")
+        sl2 = float("NAN")
 
-# MAPPING FUNCTIONS
+    try: #front sensor
+        sf = BP.get_sensor(sonarPortF) * EV3ultrasonicCalibration
+    except brickpi3.SensorError as error:
+        sf = float("NAN")
+        print(error)
+    return(sf, sr1, sr2, sl1, sl2)
 
-def logMap(filename, mapNum):
-    fid = open(filename, "w") # add check if file exists so it doesn't overwrite
-    fid.write("Team: {} \nMap: {} \n Unit Length: {} \nUnit: {} \nOrigin: {} \nNotes{}".format)
-    fid.close()
-    return(fid)
+wallStorgae1 = [0,0,0] #angle, s1, s2
+def singleWallPos(wallSensorData):
 
-def updateMap(fid,)
+    s1 = wallSensorData[1]
+    s2 = wallSensorData[2]
+    distance = min(s1, s2)
+    if abs(s1 - wallStorgae1[1]) > errorThreshold or abs(s2 - wallStorgae1[2]) > errorThreshold:
+        error = 1 
+    else: error = 0
+    wallStorgae1[1] = s1
+    wallStorgae1[2] = s2
+    angle = 180 / pi * asin((s2 - s1) / sensorDistance)
+    return(distance, angle, error)
 
 #%%
 # Run for testing 

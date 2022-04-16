@@ -9,17 +9,24 @@ import GEARS_DriveFunctions_v as d # import drive control functions
 # MAIN SCRIPT
 t0 = time.time()
 rdt = 0
+heading = 0
 print("starting loop")
 lockCargo()
 try:
     while True:
         
-        ultrasonicData = IMU.sensorUpdate()
-        IMU.angleUpdate(rdt)
+        #ultrasonicData = IMU.sensorUpdate()
+
+        #IMU.angleUpdate(rdt)
         #IMU.wallPos(ultrasonicData)
         
         
-        d.followWalls(ultrasonicData)
+        # d.followWalls(ultrasonicData)
+
+
+        wallSensorData = IMU.updateWallSensors()
+        IMU.distanceUpdate(speed,rdt,heading)
+        d.driveSingleWall(wallSensorData)
         time.sleep(dT)
         rdt = time.time() - t0
         t0 = time.time()

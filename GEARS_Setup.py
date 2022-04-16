@@ -19,9 +19,24 @@ turnPower = 50 # dps of wheels, for turning functions
 
 # GROVE PORT VAR DEFINITIONS & INITIALIZATIONS
 # use digital port (D) for all
-sonarPort1 = 2 # left
-sonarPort2 = 7 # center
-sonarPort3 = 4 # right
+
+# # OLD SETUP
+# sonarPort1 = 2 # left
+# sonarPort2 = 7 # center
+# sonarPort3 = 4 # right
+
+# EV3 Ultrasonic
+sonarPortF = BP.PORT_1
+BP.set_sensor_type(sonarPortF, BP.SENSOR_TYPE.EV3_ULTRASONIC_CM) # Configure for an EV3 ultrasonic sensor.
+
+sonarPortR1 = 0 # right front
+sonarPortR2 = 0 # right back
+sonarPortL1 = 7 # left front
+sonarPortL2 = 2 # left back
+
+sensorDistance = 13.4 # cm between sensors
+targetWallOffset = 6 # cm
+
 
 #SETTING VARS
 # global dT
@@ -31,11 +46,18 @@ angleOffsetThreshold = 25 # how far off center does robot need to be to react
 speed = 10 # cm/s
 
 # Ultrasonic Calibration
-ultrasonicCalibration = 1.15 # currently calibrated to my desk
+ultrasonicCalibration = 1.15 # 
+EV3ultrasonicCalibration = 1
 sensorOffset = 25 / 2 # distance from CoM in cm
 hallWidth = 40 # cm
-wallCalibration = 20 # ultrasonic units
+wallCalibration = 25 # distance to detect walls, cm
 
+pTurn = 0.03
+dTurn = 0.01
+
+
+#INITIALIZE STUFF
+heading = 0
 def lockCargo():
     zeroPositionA = BP.get_motor_encoder(motorC)
     BP.offset_motor_encoder(motorC, zeroPositionA) # Set current position of motor A to 'zero' position.

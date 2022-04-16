@@ -77,24 +77,25 @@ def turn (deg): # based on IMU data
     print("done turning")
 
 def turnTime (deg): # time based turning
-    const = 0.0775
+    const = 0.0767
     t0 = time.time()
     t1 = time.time()
     drive(0, IMU.sign(deg) * turnPower)
     timeStop = const * abs(deg)
     turn = 0
-    a0 = IMU.angle['z']
+    a0 = IMU.sign(IMU.angle['z']) * IMU.length(IMU.angle)
     if IMU.sign(deg) > 0:
         print('turning right...')
     elif IMU.sign(deg) < 0:
         print('turning left...')
-    while abs(turn) <= abs(deg):
+    while abs(time.time()-t0) <= abs(timeStop):
         time.sleep(dT)
         turn = IMU.sign(IMU.angle['z']) * IMU.length(IMU.angle) - a0
         
         rdt = time.time() - t1
-        IMU.angleUpdate(rdt)
         t1 = time.time()
+        IMU.angleUpdate(rdt)
+        
         
     drive(0, 0)
     print(turn)
@@ -190,9 +191,10 @@ def followWalls(sensorData): # this goes inside a while loop
         walls = IMU.detectWall(sensorData)
         print(walls)
         if walls[3] == 0:
-            driveDistance(15, speed, 0)
+            print("Doing right turn")
+            driveDistance(10, speed, 0)
             drive(0,0)
-            turnTime(80)
+            turnTime(90)
             time.sleep(dT)
             sensorData = IMU.sensorUpdate()
             walls = IMU.detectWall(sensorData)
@@ -207,13 +209,48 @@ def followWalls(sensorData): # this goes inside a while loop
         elif walls[1] == 0: turnTime(-90)
         turnCorrection = 0
     elif (abs(offset) > centerOffsetThreshold) or (abs(angle) > angleOffsetThreshold): # robot needs to correct
-        turnCorrection = 0.05 * offset - 0.01 * IMU.angle["z"]
+        turnCorrection = pTurn * offset - dTurn * IMU.sign(IMU.angle["z"]) * angle
         print("turning: ", turnCorrection)
     else: 
         turnCorrection = 0
     driveSpeed(speed, turnCorrection)
 
+def driveSingleWall(sensorData):
+    distance, angle, gap = IMU.singleWallPos(sensorData)
+    error = targetWallOffset - distance
+    if sensorData[0] < wallCalibration: # there's a wall in front
+        print("THERES A WALL IN THE WAY")
+        turnTime(90)
+    elif not error:
+        turnCorrection = pTurn * error - dTurn * angle
+        drive(speed, turnCorrection)
+    elif error:
+        if distance > wallCalibration:
+            print("right turn")
+            driveDistance(10, speed, 0)
+            drive(0,0)
+            turnTime(90)
+            heading += 90
+            time.sleep(dT)
+            
+            # sensorData = IMU.updateWallSensors()
 
+            # walls = IMU.detectWall(sensorData)
+            # if walls[2] == 0:
+            #     #driveSpeed(speed, 0)
+            #     driveDistance(30, speed, 90)
+            #     print("going straight")
+            #     #time.sleep(5)
+            # else: print("THERES A WALL IN THE WAY")
+            IMU.angle = IMU.vec0()
+            print("reset angle")
+
+
+
+
+
+
+#def updateMotorPos
 
 def end (): #resets stuff/stops wheels
     BP.reset_all()        # Unconfigure the sensors, disable the motors, and restore the LED to the control of the BrickPi3 firmware.
