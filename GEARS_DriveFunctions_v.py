@@ -1,7 +1,7 @@
 from GEARS_Setup import *   # put all the settings in one place
 
 import vectors_v as IMU      # import custom IMU/vector math functions
-
+from math import isnan
 
 
 # DRIVING FUNCTIONS
@@ -216,21 +216,29 @@ def followWalls(sensorData): # this goes inside a while loop
     driveSpeed(speed, turnCorrection)
 
 def driveSingleWall(sensorData):
+    print(sensorData)
     distance, angle, gap = IMU.singleWallPos(sensorData)
-    error = targetWallOffset - distance
+    if isnan(angle): gap = 1# makes other isnan redundant probably
+    
+    error = targetWallOffset - distance # + error means too close = 
     if sensorData[0] < wallCalibration: # there's a wall in front
         print("THERES A WALL IN THE WAY")
         turnTime(90)
-    elif not error:
-        turnCorrection = pTurn * error - dTurn * angle
-        drive(speed, turnCorrection)
-    elif error:
+    elif not gap:
+        # print("drive")
+        turnCorrection = 1 * pTurn * error + dTurn * angle
+        if isnan(turnCorrection):
+            print("skip NAN")
+        else:
+            print("correction: {0:5.2f}, distance: {1:5.2f}, angle: {2:5.2f}".format(turnCorrection, error, angle)) 
+            driveSpeed(speed, turnCorrection)
+    elif gap:
         if distance > wallCalibration:
             print("right turn")
             driveDistance(10, speed, 0)
             drive(0,0)
             turnTime(90)
-            heading += 90
+            # heading += 90 # BAD REFERNCE FIX THIS LATER!
             time.sleep(dT)
             
             # sensorData = IMU.updateWallSensors()
@@ -242,8 +250,10 @@ def driveSingleWall(sensorData):
             #     print("going straight")
             #     #time.sleep(5)
             # else: print("THERES A WALL IN THE WAY")
+            driveDistance(30,speed,90) # FIX HEADING LATER
             IMU.angle = IMU.vec0()
             print("reset angle")
+    else: print("not driving")
 
 
 

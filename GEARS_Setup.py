@@ -29,13 +29,13 @@ turnPower = 50 # dps of wheels, for turning functions
 sonarPortF = BP.PORT_1
 BP.set_sensor_type(sonarPortF, BP.SENSOR_TYPE.EV3_ULTRASONIC_CM) # Configure for an EV3 ultrasonic sensor.
 
-sonarPortR1 = 0 # right front
-sonarPortR2 = 0 # right back
+sonarPortR1 = 2 # right front
+sonarPortR2 = 4 # right back
 sonarPortL1 = 7 # left front
-sonarPortL2 = 2 # left back
+sonarPortL2 = 0 # left back
 
 sensorDistance = 13.4 # cm between sensors
-targetWallOffset = 6 # cm
+targetWallOffset = 10 # cm
 
 
 #SETTING VARS

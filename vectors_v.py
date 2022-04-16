@@ -197,11 +197,12 @@ def updateWallSensors(): # for 5 sensors
         sl1 = float("NAN")
         sl2 = float("NAN")
 
-    try: #front sensor
-        sf = BP.get_sensor(sonarPortF) * EV3ultrasonicCalibration
-    except brickpi3.SensorError as error:
-        sf = float("NAN")
-        print(error)
+    #try: #front sensor
+     #   sf = BP.get_sensor(sonarPortF) * EV3ultrasonicCalibration
+    #except brickpi3.SensorError as error:
+     #   sf = float("NAN")
+      #  print(error)
+    sf = 50
     return(sf, sr1, sr2, sl1, sl2)
 
 wallStorgae1 = [0,0,0] #angle, s1, s2
@@ -215,7 +216,10 @@ def singleWallPos(wallSensorData):
     else: error = 0
     wallStorgae1[1] = s1
     wallStorgae1[2] = s2
-    angle = 180 / pi * asin((s2 - s1) / sensorDistance)
+    try:
+        angle = 180 / pi * asin((s2 - s1) / sensorDistance)
+    except ValueError:
+        angle = float("NAN")
     return(distance, angle, error)
 
 #%%

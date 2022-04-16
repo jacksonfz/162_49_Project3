@@ -24,9 +24,12 @@ try:
         # d.followWalls(ultrasonicData)
 
 
+
         wallSensorData = IMU.updateWallSensors()
-        IMU.distanceUpdate(speed,rdt,heading)
+        #print(IMU.singleWallPos(wallSensorData))
+ 
         d.driveSingleWall(wallSensorData)
+        #IMU.distanceUpdate(speed,rdt,heading)
         time.sleep(dT)
         rdt = time.time() - t0
         t0 = time.time()
