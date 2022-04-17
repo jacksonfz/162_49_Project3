@@ -142,6 +142,12 @@ def detectWall(sensorData):
             wall[i] = False
     return wall
 
+def checkWall(sensorData): # for more sensors
+    wall[2] = sensorData[0] > wallCalibration # front
+    wall[1] = (sensorData[3] > wallCalibration) + (sensorData[4] > wallCalibration) # left
+    wall[3] = (sensorData[1] > wallCalibration) + (sensorData[2] > wallCalibration) # left
+    return(wall)
+
 
 # WallPos setup stuff
 
