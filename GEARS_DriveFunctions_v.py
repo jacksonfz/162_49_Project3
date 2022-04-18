@@ -1,24 +1,10 @@
+from GEARS_Setup import *   # put all the settings in one place
 
-import time
-from turtle import heading     # this library contains the sleep (delay) function
-import brickpi3 # import BrickPi3 library
-import grovepi  # import GrovePi library
 import vectors_v as IMU      # import custom IMU/vector math functions
+from math import isnan
+import GEARS_Mapping as m
 
 
-# SETUP SENSORS AND MOTORS
-BP = brickpi3.BrickPi3() #initialize birckpi
-
-# PORT DEFINITIONS
-motorL = BP.PORT_C
-motorR = BP.PORT_B
-
-# OTHER DEFINITIONS
-wheelCirc = 16.4 # cm
-turnPower = 50 # dps of wheels
-
-try: dT = dT
-except: dT = 0.1
 
 # DRIVING FUNCTIONS
 def drive (dps, turn): #makes the wheels go at a desired dps
@@ -37,46 +23,16 @@ def drivePower (power, turn):
     BP.set_motor_power(motorR, power - (power * turn))
     return
 
-def driveWalls (speed):
-    dps = -1 * speed * 360 / wheelCirc
-    leftPort = 2
-    rightPort = 4
-    coefProp = 0.02
-    coefInt = 0
-    integral = 0
-    derivative = 0.01
-    coefDer = 0
-    error0 = 0
-    
-    try:
-        while True:
-            IMU.angleUpdate(dT)
-            turn = IMU.sign(IMU.angle['z']) * IMU.length(IMU.angle)
-            print(turn)
-            
-            
-            leftD = grovepi.ultrasonicRead(leftPort)
-            rightD = grovepi.ultrasonicRead(rightPort)
-            error = leftD - rightD
-            integral += dT * error
-            derivative = (error - error0) / dT
-            error0 = error
 
-            correction = error * coefProp + integral * coefInt + derivative * coefDer
-            BP.set_motor_dps(motorL, dps * (1 + (correction)))
-            BP.set_motor_dps(motorR, dps * (1 - (correction)))
-
-            # print("PID: {}, {}, {}, correction: {})".format(error * coefProp, integral, derivative, correction))
-
-            time.sleep(dT)
-            
-    except KeyboardInterrupt:
-        drive(0, 0)
-        
+def end (): #resets stuff/stops wheels
+    BP.reset_all()        # Unconfigure the sensors, disable the motors, and restore the LED to the control of the BrickPi3 firmware.
+    print("program ended")
     return
-        
 
-def turn (deg):
+
+# TURNING FUNCTIONS
+
+def turn (deg): # based on IMU data
     t0 = time.time()
     drive(0, IMU.sign(deg) * turnPower)
     IMU.angle = {
@@ -92,24 +48,26 @@ def turn (deg):
     drive(0,0)
     print("done turning")
 
-def turnTime (deg):
-    const = 0.0775
+def turnTime (deg): # time based turning
+    const = 0.0767
     t0 = time.time()
     t1 = time.time()
     drive(0, IMU.sign(deg) * turnPower)
     timeStop = const * abs(deg)
     turn = 0
+    a0 = IMU.sign(IMU.angle['z']) * IMU.length(IMU.angle)
     if IMU.sign(deg) > 0:
         print('turning right...')
     elif IMU.sign(deg) < 0:
         print('turning left...')
-    while abs(turn) <= abs(deg):
+    while abs(time.time()-t0) <= abs(timeStop):
         time.sleep(dT)
-        turn = IMU.sign(IMU.angle['z']) * IMU.length(IMU.angle)
+        turn = IMU.sign(IMU.angle['z']) * IMU.length(IMU.angle) - a0
         
         rdt = time.time() - t1
-        IMU.angleUpdate(rdt)
         t1 = time.time()
+        IMU.angleUpdate(rdt)
+        
         
     drive(0, 0)
     print(turn)
@@ -193,80 +151,102 @@ def driveToPoints(points):
         variable = input('Press any button, then enter...')
         print('driveToPoint iteration')
 
+def driveSingleWall(sensorData): # follow right wall with 2 sensors
+  #  print(sensorData)
+    distance, angle, gap = IMU.singleWallPos(sensorData)
+#    print("d: {}, a: {}, turn: {}".format(distance, angle, gap))
+    if isnan(angle): gap = 1 # makes other isnan redundant probably
+    walls = IMU.checkWall(sensorData)
+    if walls[3] < 2 or walls[2] == True: gap = 1 # THEREs WAY TOO MANY TIMES CHECKING FOR GAP BUT WHATEVER
+                                # this only checks right and front walls
+#    if sensorData[0] < wallCalibration: # there's a wall in front
+#        print("THERES A WALL IN THE WAY")
+        
+    elif not gap:
+        # print("drive")
+        error = targetWallOffset - distance # + error means too close =     
+        turnCorrection = 1 * pTurn * error + dTurn * angle
+        if isnan(turnCorrection):
+            print("skip NAN")
+        else:
+            print("correction: {0:5.2f}, distance: {1:5.2f}, angle: {2:5.2f}".format(turnCorrection, error, angle)) 
+            driveSpeed(speed, turnCorrection)
+    elif gap:
+        print("gap. ")
+#        if distance > wallCalibration:
+ #           print("right turn")
+  #          driveDistance(10, speed, 0)
+   #         drive(0,0)
+    #        turnTime(90)
+     #       heading[0] += 90 # Its a list because it works
+      #      time.sleep(dT)
+            
+            # sensorData = IMU.updateWallSensors()
 
-def end (): #resets stuff/stops wheels
-    BP.reset_all()        # Unconfigure the sensors, disable the motors, and restore the LED to the control of the BrickPi3 firmware.
-    print("program ended")
-    return
+            # walls = IMU.detectWall(sensorData)
+            # if walls[2] == 0:
+            #     #driveSpeed(speed, 0)
+            #     driveDistance(30, speed, 90)
+            #     print("going straight")
+            #     #time.sleep(5)
+            # else: print("THERES A WALL IN THE WAY")
+       #     driveDistance(30,speed,90) # FIX HEADING LATER
+       #     IMU.angle = IMU.vec0()
+       #     print("reset angle")
+    else: print("not driving. This shouldn't happen")
+    return (gap) # if true should check for turns
 
-def driveStop(): #for the speed challenge
-    speed = int(input("Input speed in cm/s: "))
-    driveSpeed(speed, 0)
-    while True:
-        sonarData = grovepi.ultrasonicRead(sonar1)
-        if sonarData > stopDistance:
-            break
-    drive(0,0)
-    return
+# drive
+def turnPoint(sensorData): # Does turn and map logging stuff
+    walls = IMU.checkWall(sensorData)
+    print("walls: ", walls)
+    if walls[3] < 2: # no wall to the right
+        print("right turn")
+        driveDistance(10, speed, 0)
+        drive(0,0)
 
-# DISTANCE TRACKING
+        # DO MAP UPDATE STUFF HERE WHILE STOPPED
+        print(IMU.pos)
+        print("heading: ", heading[0])
+        point = IMU.fixPos()
+        m.logPath(point)
+        turnTime(85)
+        heading[0] += 90 # Its a list because it works
+        time.sleep(dT)
+
+        driveDistance(30,speed,heading[0]) # FIX HEADING LATER
+        IMU.angle = IMU.vec0()
+        print("reset angle")
+    elif walls[2] == 1:
+        print("front wall")
+        print("left turn")
+        # driveDistance(10, speed, 0)
+        drive(0,0)
+
+        # DO MAP UPDATE STUFF HERE WHILE STOPPED
+        print("heading: ", heading[0])
+        point = IMU.fixPos()
+        m.logPath(point)
+        turnTime(-85)
+        heading[0] -= 90 # Its a list because it works
+        time.sleep(dT)
+        IMU.angle = IMU.vec0()
+        print("reset angle")
+    # sensorData = IMU.updateWallSensors()
+
+    # walls = IMU.detectWall(sensorData)
+    # if walls[2] == 0:
+    #     #driveSpeed(speed, 0)
+    #     driveDistance(30, speed, 90)
+    #     print("going straight")
+    #     #time.sleep(5)
+    # else: print("THERES A WALL IN THE WAY")
+        #driveDistance(30,speed,90) # FIX HEADING LATER
+        
+    else:
+        print("not right turn add some more code")
 
 
 
-# DRIVE LOOPS FOR EASY TESTING
-def driveLoop(): #dps
-    while True:
-        try:
-            driveInput = (input("drive: ")).split()
-            speed, turn = float(driveInput[0]), float(driveInput[1]) 
-            # print("{}, {}".format(speed, turn))
-            drive(speed, turn)
-        except KeyboardInterrupt:
-            drive(0,0)
-            print("stopped")
-            try:
-                driveInput = (input("drive: ")).split()
-                speed, turn = float(driveInput[0]), float(driveInput[1])
-                drive(speed, turn)
-            except KeyboardInterrupt:
-                break
 
-def driveSpeedLoop(): #cm/s
-    while True:
-        try:
-            driveInput = (input("drive: ")).split()
-            if len(driveInput) < 2: speed, turn = driveInput, 0
-            else: speed, turn = float(driveInput[0]), float(driveInput[1]) 
-            # print("{}, {}".format(speed, turn))
-            driveSpeed(speed, turn)
-        except IndexError:
-                turn = 0
-        except KeyboardInterrupt:
-            driveSpeed(0,0)
-            print("stopped")
-            try:
-                driveInput = (input("drive: ")).split()
-                if len(driveInput) < 2: speed, turn = driveInput, 0
-                else: speed, turn = float(driveInput[0]), float(driveInput[1])
-                driveSpeed(speed, turn)
-            except IndexError:
-                turn = 0
-            except KeyboardInterrupt:
-                break
 
-def drivePowerLoop(): #power [0,100]
-    while True:
-        try:
-            driveInput = (input("drive: ")).split()
-            speed, turn = float(driveInput[0]), float(driveInput[1]) 
-            # print("{}, {}".format(speed, turn))
-            drivePower(speed, turn)
-        except KeyboardInterrupt:
-            drivePower(0,0)
-            print("stopped")
-            try:
-                driveInput = (input("drive: ")).split()
-                speed, turn = float(driveInput[0]), float(driveInput[1])
-                drivePower(speed, turn)
-            except KeyboardInterrupt:
-                break

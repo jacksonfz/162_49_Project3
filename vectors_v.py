@@ -3,20 +3,12 @@
 NOTES
     don't import individual functions it won't work
 """
-try: from MPU9250 import MPU9250
-except: print("IMU setup error")
 
-import sys 
-import time
-from math import sqrt, sin, cos, pi, acos
+from GEARS_Setup import *   # put all the settings in one place
+
+from MPU9250 import MPU9250
+from math import sqrt, sin, cos, pi, acos, asin
 mpu9250 = MPU9250()
-
-# for wall sensing
-import brickpi3 # import BrickPi3 library
-import grovepi  # import GrovePi library
-
-# SETTING VARS
-wallCalibration = 10 # ultrasonic units
 
 #%% SENSOR FUNCTIONS
 
@@ -134,20 +126,31 @@ def distanceUpdate(speed, timeStep, heading):
     print("pos: {}, heading: {}".format(pos, heading))
 
 #%% OTHER SENSOR FUNCTIONS
-wall = [0,0,0]
+
+# def sensorUpdate(): # For 3 ultrasonic sensors
+#     s1 = grovepi.ultrasonicRead(sonarPort1) * ultrasonicCalibration # left side sensor distance 
+#     s2 = grovepi.ultrasonicRead(sonarPort2) * ultrasonicCalibration # center sesnor distance
+#     s3 = grovepi.ultrasonicRead(sonarPort3) * ultrasonicCalibration # right side sesnor distance
+#     return(0, s1, s2, s3) #first spot isn't used for easy indexing
+
+wall = [0,0,0,0] #first spot isn't used for easy indexing
 def detectWall(sensorData):
-    for i in range(0,2): # for 3 walls (l, c ,r)
+    for i in range(1,len(sensorData)): # for 3 walls (0, l, c ,r)
         if sensorData[i] < wallCalibration:
             wall[i] = True
         else:
             wall[i] = False
     return wall
 
+def checkWall(sensorData): # for more sensors
+    wall[2] = sensorData[0] < wallCalibration # front
+    wall[1] = (sensorData[3] < wallCalibration) + (sensorData[4] < wallCalibration) # left
+    wall[3] = (sensorData[1] < wallCalibration) + (sensorData[2] < wallCalibration) # left
+    return(wall)
+
 
 # WallPos setup stuff
 
-ultrasonicCalibration = 1.2 # fix this
-sensorOffset = 22.5 / 2 # distance from CoM in cm
 prevOffset = 0 # store for derivative
 s1Prev = 0 # storage for hallway detection
 s2Prev = 0
@@ -156,15 +159,18 @@ errorThreshold = 10 # if delta s > this readings are assumed to be wrong because
 
 wallPosStorage = [prevOffset, s1Prev, s2Prev] # passing things to be updated just works better in a list idk
 
-def wallPos(leftPort, rightPort, hallWidth):
+def wallPos(sensorData): # with 1 sensor on each size
     
-    # Get sensor data and convert to cm
-    s1 = grovepi.ultrasonicRead(leftPort) * ultrasonicCalibration # left side sensor distance 
-    s2 = grovepi.ultrasonicRead(rightPort) * ultrasonicCalibration # right side sesnor distance
+    # # Get sensor data and convert to cm
+    # s1 = grovepi.ultrasonicRead(sonarPort1) * ultrasonicCalibration # left side sensor distance 
+    # s2 = grovepi.ultrasonicRead(sonarPort3) * ultrasonicCalibration # right side sesnor distance
+    s1 = sensorData[1]
+    s2 = sensorData[3] # s2 = sensor 3 = right 
 
     # check for side hallways
         # NOTE FOR LATER: Return sensor values or way to override error if very close to wall
-    if abs(s1 - wallPosStorage[1]) > errorThreshold or abs(s2 - wallPosStorage[2]) > errorThreshold: error = 1 
+    if abs(s1 - wallPosStorage[1]) > errorThreshold or abs(s2 - wallPosStorage[2]) > errorThreshold:
+        error = 1 
     else: error = 0
     wallPosStorage[1] = s1
     wallPosStorage[2] = s2
@@ -174,21 +180,68 @@ def wallPos(leftPort, rightPort, hallWidth):
     direction = sign(offset - wallPosStorage[0]) # for angle sign, watch for noise
     wallPosStorage[0] = offset # update prev value
     try:
-        theta = 180 / pi * acos(hallWidth /(s1 + s2 + 2 * sensorOffset)) #* direction # angle of the robot relative to walls, + is clockwise
+        theta = 180 / pi * acos(hallWidth /(s1 + s2 + 2 * sensorOffset)) * direction # angle of the robot relative to walls, + is clockwise
     except ValueError:
-        theta = 360
+        theta = 0 #float("NAN")
+        
     
 
     # debug printing
     ow = s1 + s2 + sensorOffset * 2
-    print("s1: {0:5.1f}cm, s2: {1:5.1f}cm, offset: {2:5.1f}cm, angle: {3:5.3f}, width: {5:4.1f}, error: {4}".format(s1, s2, offset, theta, error, ow))
+    print("s1: {0:5.1f}cm, s2: {1:5.1f}cm, offset: {2:5.1f}cm, WallAngle: {3:5.3f}, IMU: {6:4.1f} width: {5:4.1f}, error: {4}".format(s1, s2, offset, theta, error, ow, angle["z"]))
 
 
-    return(offset, theta, error)
+    return(offset, theta, bool(error))
 
-print("loop")
-while True:
-    wallPos(2, 4, 57)
-    time.sleep(1)
+def updateWallSensors(): # for 5 sensors
+    sr1 = grovepi.ultrasonicRead(sonarPortR1) * ultrasonicCalibration # right side sensor 1distance 
+    sr2 = grovepi.ultrasonicRead(sonarPortR2) * ultrasonicCalibration # center sesnor distance
+    try: #left side is optional
+        sl1 = grovepi.ultrasonicRead(sonarPortL1) * ultrasonicCalibration # right side sesnor distance
+        sl2 = grovepi.ultrasonicRead(sonarPortL2) * ultrasonicCalibration # right side sesnor distance
+    except IOError:
+        sl1 = float("NAN")
+        sl2 = float("NAN")
+
+    try: #front sensor
+        sf = BP.get_sensor(sonarPortF) * EV3ultrasonicCalibration
+    except brickpi3.SensorError as error:
+        sf = float("NAN")
+        print(error)
+    #sf = 50
+    return(sf, sr1, sr2, sl1, sl2)
+
+wallStorgae1 = [0,0,0] #angle, s1, s2
+def singleWallPos(wallSensorData):
+
+    s1 = wallSensorData[1]
+    s2 = wallSensorData[2]
+    distance = (s1 + s2) / 2
+    if abs(s1 - wallStorgae1[1]) > errorThreshold or abs(s2 - wallStorgae1[2]) > errorThreshold:
+        error = 1 
+    else: error = 0
+    wallStorgae1[1] = s1
+    wallStorgae1[2] = s2
+    try:
+        angle = 180 / pi * asin((s2 - s1) / sensorDistance)
+        angle = min(max(angle, -25), 25)
+    except ValueError:
+        angle = float("NAN")
+    return(distance, angle, error)
+
+def fixPos():
+    print(pos)
+    gridPos = (round(pos["x"] / hallWidth), round(pos["y"] / hallWidth))
+    pos["x"] = gridPos[0] * hallWidth
+    pos["y"] = gridPos[1] * hallWidth
+    print(pos)
+    return("fixed: ", gridPos)
+
+#%%
+# Run for testing 
+# print("loop")
+#while True:
+ #   wallPos(2)
+  #  time.sleep(1)
 
     
