@@ -202,7 +202,7 @@ def turnPoint(sensorData): # Does turn and map logging stuff
     print("walls: ", walls)
     if walls[3] < 2: # no wall to the right
         print("right turn")
-        driveDistance(10, speed, 0)
+        driveDistance(10, speed, heading[0])
         drive(0,0)
 
         # DO MAP UPDATE STUFF HERE WHILE STOPPED
@@ -232,16 +232,6 @@ def turnPoint(sensorData): # Does turn and map logging stuff
         time.sleep(dT)
         IMU.angle = IMU.vec0()
         print("reset angle")
-    # sensorData = IMU.updateWallSensors()
-
-    # walls = IMU.detectWall(sensorData)
-    # if walls[2] == 0:
-    #     #driveSpeed(speed, 0)
-    #     driveDistance(30, speed, 90)
-    #     print("going straight")
-    #     #time.sleep(5)
-    # else: print("THERES A WALL IN THE WAY")
-        #driveDistance(30,speed,90) # FIX HEADING LATER
         
     else:
         print("not right turn add some more code")

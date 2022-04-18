@@ -194,8 +194,8 @@ def wallPos(sensorData): # with 1 sensor on each size
     return(offset, theta, bool(error))
 
 def updateWallSensors(): # for 5 sensors
-    sr1 = grovepi.ultrasonicRead(sonarPortR1) * ultrasonicCalibration # right side sensor 1distance 
-    sr2 = grovepi.ultrasonicRead(sonarPortR2) * ultrasonicCalibration # center sesnor distance
+    sr1 = grovepi.ultrasonicRead(sonarPortR1) * ultrasonicCalibration # right side sensor 1 distance 
+    sr2 = grovepi.ultrasonicRead(sonarPortR2) * ultrasonicCalibration # center sensor distance
     try: #left side is optional
         sl1 = grovepi.ultrasonicRead(sonarPortL1) * ultrasonicCalibration # right side sesnor distance
         sl2 = grovepi.ultrasonicRead(sonarPortL2) * ultrasonicCalibration # right side sesnor distance
