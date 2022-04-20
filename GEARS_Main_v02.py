@@ -29,9 +29,9 @@ try:
             print("turn point")
             wallSensorData = IMU.updateWallSensors()
             # savePos = IMU.pos.copy() # it will update during turning
-            d.turnPoint(wallSensorData)
+            d.turnPoint(wallSensorData, heading)
                 
-
+        print('heading in main: {} id: {}'.format(heading[0], id(heading)))
         IMU.distanceUpdate(speed,rdt,heading[0])
         time.sleep(dT)
         rdt = time.time() - t0

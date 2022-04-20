@@ -90,7 +90,7 @@ def driveDistance(distance, speed, heading): # drives distance in whichever dire
             t0 = time.time()
             time.sleep(dT)
             distTravelled = IMU.length(IMU.add(IMU.pos, IMU.scale(p0, -1)))
-        print(heading)
+        #print(heading)
     except KeyboardInterrupt:
         drive(0,0)
     drive(0, 0)
@@ -197,7 +197,7 @@ def driveSingleWall(sensorData): # follow right wall with 2 sensors
     return (gap) # if true should check for turns
 
 # drive
-def turnPoint(sensorData): # Does turn and map logging stuff
+def turnPoint(sensorData, heading): # Does turn and map logging stuff
     walls = IMU.checkWall(sensorData)
     print("walls: ", walls)
     if walls[3] < 2: # no wall to the right
@@ -207,16 +207,17 @@ def turnPoint(sensorData): # Does turn and map logging stuff
 
         # DO MAP UPDATE STUFF HERE WHILE STOPPED
         print(IMU.pos)
-        print("heading: ", heading[0])
+        print('before turn heading: {} id: {}'.format(heading[0], id(heading)))
         point = IMU.fixPos()
         m.logPath(point)
         turnTime(85)
         heading[0] += 90 # Its a list because it works
+        print('after turn heading: {} id: {}'.format(heading[0], id(heading)))
         time.sleep(dT)
 
         driveDistance(30,speed,heading[0]) # FIX HEADING LATER
-        IMU.angle = IMU.vec0()
-        print("reset angle")
+        #IMU.angle = IMU.vec0()
+        #print("reset angle")
     elif walls[2] == 1:
         print("front wall")
         print("left turn")
@@ -224,14 +225,15 @@ def turnPoint(sensorData): # Does turn and map logging stuff
         drive(0,0)
 
         # DO MAP UPDATE STUFF HERE WHILE STOPPED
-        print("heading: ", heading[0])
+        print('before turn heading: {} id: {}'.format(heading[0], id(heading)))
         point = IMU.fixPos()
         m.logPath(point)
         turnTime(-85)
         heading[0] -= 90 # Its a list because it works
+        print('after turn heading: {} id: {}'.format(heading[0], id(heading)))
         time.sleep(dT)
-        IMU.angle = IMU.vec0()
-        print("reset angle")
+        #IMU.angle = IMU.vec0()
+        #print("reset angle")
         
     else:
         print("not right turn add some more code")

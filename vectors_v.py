@@ -235,7 +235,7 @@ def fixPos():
     pos["x"] = gridPos[0] * hallWidth
     pos["y"] = gridPos[1] * hallWidth
     print(pos)
-    return("fixed: ", gridPos)
+    return(gridPos)
 
 #%%
 # Run for testing 
