@@ -21,24 +21,29 @@ print("starting main loop")
 try:
     while True:
         
-        wallSensorData = IMU.updateWallSensors()
-        #print(IMU.singleWallPos(wallSensorData))
+        wallSensorData = IMU.updateWallSensors()            # get ultrasonic data
  
-        intersection = d.driveSingleWall(wallSensorData)
+        # STRAIGHT WALL FOLLOWING
+        intersection = d.driveSingleWall(wallSensorData)    # follows wall and returns check for interesection
+        IMU.detectHazards()                                 # check for IR & EM hazards
+
+        # TURNING
         if intersection: # Do turn stuff
             print("turn point")
-            wallSensorData = IMU.updateWallSensors()
-            # savePos = IMU.pos.copy() # it will update during turning
-            d.turnPoint(wallSensorData, heading)
+            wallSensorData = IMU.updateWallSensors()        # get more sensor data (make sure there's a wall)
+            d.turnPoint(wallSensorData, heading)            # do turn point stuff based on wall data
                 
-        print('heading in main: {} id: {}'.format(heading[0], id(heading)))
-        IMU.distanceUpdate(speed,rdt,heading[0])
-        time.sleep(dT)
+        print('heading in main: {} id: {}'.format(heading[0], id(heading))) # check heading
+        IMU.distanceUpdate(speed,rdt,heading[0])            # update the pos vector (DOING WEIRD STUFF SOMETIMES???)
+
+        time.sleep(dT)              # time management
         rdt = time.time() - t0
         t0 = time.time()
+        
 except KeyboardInterrupt:
         d.drive(0,0)
         d.end()
-        m.saveMap("testmap.csv", m.map)
+        m.saveMap("test", m.map)
+        m.saveHazards("test", m.hazards)
         
 print("done")

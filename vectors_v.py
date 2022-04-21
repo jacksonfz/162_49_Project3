@@ -123,7 +123,8 @@ def distanceUpdate(speed, timeStep, heading):
     pos["x"] += timeStep * speed * round(sin(heading * pi / 180), 3)
     pos["y"] += timeStep * speed * round(cos(heading * pi / 180), 3)
     # printVec(pos)
-    print("pos: {}, heading: {}".format(pos, heading))
+    add = [timeStep * speed * round(sin(heading * pi / 180), 3), timeStep * speed * round(cos(heading * pi / 180), 3)]
+    print("pos: {}, heading: {}, add: {}".format(pos, heading, add))
 
 #%% OTHER SENSOR FUNCTIONS
 
@@ -211,6 +212,8 @@ def updateWallSensors(): # for 5 sensors
     #sf = 50
     return(sf, sr1, sr2, sl1, sl2)
 
+
+
 wallStorgae1 = [0,0,0] #angle, s1, s2
 def singleWallPos(wallSensorData):
 
@@ -237,11 +240,19 @@ def fixPos():
     print(pos)
     return(gridPos)
 
-#%%
-# Run for testing 
-# print("loop")
-#while True:
- #   wallPos(2)
-  #  time.sleep(1)
 
-    
+#%% HAZARDS DETECTION
+from IR_Functions import * # import these (from example code)
+IR_setup(grovepi) # it needs grovepi as an argument idk why
+
+def detectHazards():    
+    ir1, ir2 = IR_Read(grovepi)
+    avg = (ir1 + ir2) / 2
+    magVec = mag()
+    magLen = length(magVec)
+
+    if avg > irDetectionThreshold:
+        print("IR hazard detected!")
+    if magLen > magDetectionThreshold:
+        print("EM hazard detected!")
+    # Need to figure out how to do loggin in a way that it doesn't log the same hazard many times

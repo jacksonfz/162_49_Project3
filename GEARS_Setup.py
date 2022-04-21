@@ -55,8 +55,13 @@ wallCalibration = 15 # distance to detect walls, cm
 pTurn = 0.02
 dTurn = 0.015
 
+# HAZARD DETECTION
+irDetectionThreshold = 20
+magDetectionThreshold = 100
 
 #INITIALIZE STUFF
+
+
 heading = [0]
 def lockCargo():
     zeroPositionA = BP.get_motor_encoder(motorC)

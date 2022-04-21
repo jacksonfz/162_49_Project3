@@ -3,9 +3,9 @@ import numpy as np
 
 
 # MAPPING FUNCTIONS
-mapSize = 12
+mapSize = 15
 gridSize = 40
-origin = (0,0)
+origin = (7,7)
 map = np.zeros([mapSize, mapSize], dtype=np.int8)
 hazards = []
 
@@ -20,7 +20,7 @@ mapNumber = 0 #idk what this is for
 
 
 def logPoint(x, y, value):
-    map[x - origin[0], y - origin[0]] = int(value)
+    map[x + origin[0], y + origin[0]] = int(value)
     # print(map)
 
 def logHazard(type, pos, data):
@@ -34,7 +34,7 @@ def logHazard(type, pos, data):
     hazards.append([type, parameter,value, pos[0], pos[1]])
     
 def saveMap(fileName, array):
-    logPoint(origin[0],origin[1],5)
+    logPoint(0,0,start)
     fid = open(fileName + "_map.csv", "w") # add check if file exists so it doesn't overwrite
     fid.write("Team: {} \nMap: {} \n Unit Length: {} \nUnit: {} \nOrigin: {} \nNotes{} \n\n".format(49, mapNumber, gridSize, "cm", origin, "Test map"))
     formattedMap = str(array)                       # convert to string
@@ -59,7 +59,7 @@ def saveHazards(fileName, array):
         formattedHazard = formattedHazard.replace("]", "")
         fid.write(formattedHazard + "\n")
 
-prev = list(origin)
+prev = list((0,0)) # Distance tracking starts at (0,0)
 def logPath(point): # update the map with a striaght line path from prev to point
     try:
         if point[0] == prev[0]: # x is constant

@@ -88,9 +88,9 @@ def driveDistance(distance, speed, heading): # drives distance in whichever dire
             # print("p0: {}, dx: {}".format(p0, distTravelled))
             IMU.distanceUpdate(speed, rdT, heading)
             t0 = time.time()
-            time.sleep(dT)
-            distTravelled = IMU.length(IMU.add(IMU.pos, IMU.scale(p0, -1)))
-        #print(heading)
+            time.sleep(dT)                                                          ##############
+            distTravelled = IMU.length(IMU.add(IMU.pos, IMU.scale(p0, -1)))         # CHECK THIS: it shouldn't cause problems but it might
+        #print(heading)                                                             ##############
     except KeyboardInterrupt:
         drive(0,0)
     drive(0, 0)
