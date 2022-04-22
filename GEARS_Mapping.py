@@ -31,7 +31,7 @@ def logHazard(type, pos, data):
         value = magnet
         parameter = "Feild Strength (uT)"
     logPoint(pos, value)
-    hazards.append([type, parameter,value, pos[0], pos[1]])
+    hazards.append([type, parameter,data, pos[0], pos[1]])
     
 def saveMap(fileName, array):
     logPoint(0,0,start)

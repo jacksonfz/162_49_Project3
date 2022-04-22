@@ -173,26 +173,6 @@ def driveSingleWall(sensorData): # follow right wall with 2 sensors
             driveSpeed(speed, turnCorrection)
     elif gap:
         print("gap. ")
-#        if distance > wallCalibration:
- #           print("right turn")
-  #          driveDistance(10, speed, 0)
-   #         drive(0,0)
-    #        turnTime(90)
-     #       heading[0] += 90 # Its a list because it works
-      #      time.sleep(dT)
-            
-            # sensorData = IMU.updateWallSensors()
-
-            # walls = IMU.detectWall(sensorData)
-            # if walls[2] == 0:
-            #     #driveSpeed(speed, 0)
-            #     driveDistance(30, speed, 90)
-            #     print("going straight")
-            #     #time.sleep(5)
-            # else: print("THERES A WALL IN THE WAY")
-       #     driveDistance(30,speed,90) # FIX HEADING LATER
-       #     IMU.angle = IMU.vec0()
-       #     print("reset angle")
     else: print("not driving. This shouldn't happen")
     return (gap) # if true should check for turns
 
@@ -200,28 +180,35 @@ def driveSingleWall(sensorData): # follow right wall with 2 sensors
 def turnPoint(sensorData, heading): # Does turn and map logging stuff
     walls = IMU.checkWall(sensorData)
     print("walls: ", walls)
-    if walls[3] < 2: # no wall to the right
+    if walls[3] and walls[1] and walls[2]: # if there's walls on all 3 sides
+        print("turn around")
+        
+        # First do map stuff
+        point = IMU.fixPos()
+        m.logPath(point)
+        
+        turnTime(-180)                          # CHECK TURN CONSTANT!!!!!!!!!!!  
+        heading[0] -= 180                       # Its a list because it works
+        driveDistance(30,speed,heading[0])      # Drive forward after turn
+
+    elif walls[3] < 2: # no wall to the right
         print("right turn")
         driveDistance(10, speed, heading[0])
         drive(0,0)
 
         # DO MAP UPDATE STUFF HERE WHILE STOPPED
-        print(IMU.pos)
-        print('before turn heading: {} id: {}'.format(heading[0], id(heading)))
         point = IMU.fixPos()
         m.logPath(point)
+        
         turnTime(85)
         heading[0] += 90 # Its a list because it works
         print('after turn heading: {} id: {}'.format(heading[0], id(heading)))
         time.sleep(dT)
-
-        driveDistance(30,speed,heading[0]) # FIX HEADING LATER
-        #IMU.angle = IMU.vec0()
-        #print("reset angle")
-    elif walls[2] == 1:
+        driveDistance(30,speed,heading[0]) # Drive forward after turn
+        
+    elif walls[2] == 1: # Need to turn left
         print("front wall")
         print("left turn")
-        # driveDistance(10, speed, 0)
         drive(0,0)
 
         # DO MAP UPDATE STUFF HERE WHILE STOPPED
@@ -232,8 +219,8 @@ def turnPoint(sensorData, heading): # Does turn and map logging stuff
         heading[0] -= 90 # Its a list because it works
         print('after turn heading: {} id: {}'.format(heading[0], id(heading)))
         time.sleep(dT)
-        #IMU.angle = IMU.vec0()
-        #print("reset angle")
+        driveDistance(30,speed,heading[0]) # Drive forward after turn
+
         
     else:
         print("not right turn add some more code")

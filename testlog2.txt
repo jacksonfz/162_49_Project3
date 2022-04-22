@@ -1,0 +1,331 @@
+Python 3.7.3 (default, Apr  3 2019, 05:39:12) 
+[GCC 8.2.0] on linux
+Type "help", "copyright", "credits" or "license()" for more information.
+>>> 
+=== RESTART: /home/team_49/Desktop/Team 49 RPi Programs/GEARS_Main_v02.py ===
+modules imported
+starting main loop
+get_sensor error: Invalid sensor data
+correction:  0.15, distance:  3.68, angle:  4.92
+IR hazard detected!
+EM hazard detected!
+heading in main: 0 id: 1932199296
+pos: {'x': 0.0, 'y': 0.0, 'z': 0}, heading: 0, add: [0.0, 0.0]
+get_sensor error: Invalid sensor data
+correction: -0.06, distance:  4.25, angle: -9.88
+IR hazard detected!
+EM hazard detected!
+heading in main: 0 id: 1932199296
+pos: {'x': 0.0, 'y': 4.399843215942383, 'z': 0}, heading: 0, add: [0.0, 4.399843215942383]
+get_sensor error: Invalid sensor data
+correction: -0.00, distance:  3.68, angle: -4.92
+IR hazard detected!
+EM hazard detected!
+heading in main: 0 id: 1932199296
+pos: {'x': 0.0, 'y': 8.6252760887146, 'z': 0}, heading: 0, add: [0.0, 4.225432872772217]
+correction:  0.09, distance:  4.25, angle:  0.00
+IR hazard detected!
+EM hazard detected!
+heading in main: 0 id: 1932199296
+pos: {'x': 0.0, 'y': 12.746202945709229, 'z': 0}, heading: 0, add: [0.0, 4.120926856994629]
+correction: -0.00, distance:  3.68, angle: -4.92
+IR hazard detected!
+EM hazard detected!
+heading in main: 0 id: 1932199296
+pos: {'x': 0.0, 'y': 16.346354484558105, 'z': 0}, heading: 0, add: [0.0, 3.600151538848877]
+correction: -0.00, distance:  3.68, angle: -4.92
+IR hazard detected!
+EM hazard detected!
+heading in main: 0 id: 1932199296
+pos: {'x': 0.0, 'y': 20.208146572113037, 'z': 0}, heading: 0, add: [0.0, 3.8617920875549316]
+correction: -0.02, distance:  2.53, angle: -4.92
+IR hazard detected!
+EM hazard detected!
+heading in main: 0 id: 1932199296
+pos: {'x': 0.0, 'y': 24.665307998657227, 'z': 0}, heading: 0, add: [0.0, 4.4571614265441895]
+correction:  0.06, distance:  3.10, angle:  0.00
+IR hazard detected!
+EM hazard detected!
+heading in main: 0 id: 1932199296
+pos: {'x': 0.0, 'y': 28.515143394470215, 'z': 0}, heading: 0, add: [0.0, 3.8498353958129883]
+correction: -0.02, distance:  2.53, angle: -4.92
+IR hazard detected!
+EM hazard detected!
+heading in main: 0 id: 1932199296
+pos: {'x': 0.0, 'y': 32.78878450393677, 'z': 0}, heading: 0, add: [0.0, 4.273641109466553]
+IR hazard detected!
+EM hazard detected!
+turn point
+walls:  [0, 1, True, 2]
+front wall
+left turn
+before turn heading: 0 id: 1932199296
+{'x': 0.0, 'y': 32.78878450393677, 'z': 0}
+{'x': 0, 'y': 40, 'z': 0}
+[[0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 1 1 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]]
+turning left...
+87.48311281912534
+done turning
+after turn heading: -90 id: 1932199296
+heading in main: -90 id: 1932199296
+pos: {'x': -3.8353466987609863, 'y': 40.0, 'z': 0}, heading: -90, add: [-3.8353466987609863, 0.0]
+correction:  0.04, distance:  1.95, angle:  0.00
+IR hazard detected!
+EM hazard detected!
+heading in main: -90 id: 1932199296
+pos: {'x': -79.50448989868164, 'y': 40.0, 'z': 0}, heading: -90, add: [-75.66914319992065, 0.0]
+correction:  0.10, distance:  1.38, angle:  4.92
+IR hazard detected!
+EM hazard detected!
+heading in main: -90 id: 1932199296
+pos: {'x': -83.32698822021484, 'y': 40.0, 'z': 0}, heading: -90, add: [-3.822498321533203, 0.0]
+correction:  0.04, distance:  1.95, angle:  0.00
+IR hazard detected!
+EM hazard detected!
+heading in main: -90 id: 1932199296
+pos: {'x': -87.78512001037598, 'y': 40.0, 'z': 0}, heading: -90, add: [-4.458131790161133, 0.0]
+correction: -0.09, distance:  3.10, angle: -9.88
+IR hazard detected!
+EM hazard detected!
+heading in main: -90 id: 1932199296
+pos: {'x': -91.58602714538574, 'y': 40.0, 'z': 0}, heading: -90, add: [-3.8009071350097656, 0.0]
+correction:  0.10, distance:  1.38, angle:  4.92
+IR hazard detected!
+EM hazard detected!
+heading in main: -90 id: 1932199296
+pos: {'x': -95.74007749557495, 'y': 40.0, 'z': 0}, heading: -90, add: [-4.154050350189209, 0.0]
+correction:  0.02, distance:  0.80, angle:  0.00
+IR hazard detected!
+EM hazard detected!
+heading in main: -90 id: 1932199296
+pos: {'x': -99.52120065689087, 'y': 40.0, 'z': 0}, heading: -90, add: [-3.781123161315918, 0.0]
+correction: -0.39, distance: -0.92, angle: -25.00
+IR hazard detected!
+EM hazard detected!
+heading in main: -90 id: 1932199296
+pos: {'x': -103.49908351898193, 'y': 40.0, 'z': 0}, heading: -90, add: [-3.9778828620910645, 0.0]
+IR hazard detected!
+EM hazard detected!
+turn point
+walls:  [0, 1, False, 1]
+right turn
+pos: {'x': -103.50466012954712, 'y': 40.0, 'z': 0}, heading: -90, add: [-0.005576610565185547, 0.0]
+pos: {'x': -105.50802230834961, 'y': 40.0, 'z': 0}, heading: -90, add: [-2.0033621788024902, 0.0]
+pos: {'x': -107.51101732254028, 'y': 40.0, 'z': 0}, heading: -90, add: [-2.002995014190674, 0.0]
+pos: {'x': -109.51400756835938, 'y': 40.0, 'z': 0}, heading: -90, add: [-2.002990245819092, 0.0]
+pos: {'x': -111.51764154434204, 'y': 40.0, 'z': 0}, heading: -90, add: [-2.003633975982666, 0.0]
+pos: {'x': -113.5215163230896, 'y': 40.0, 'z': 0}, heading: -90, add: [-2.0038747787475586, 0.0]
+{'x': -113.5215163230896, 'y': 40.0, 'z': 0}
+before turn heading: -90 id: 1932199296
+{'x': -113.5215163230896, 'y': 40.0, 'z': 0}
+{'x': -120, 'y': 40, 'z': 0}
+range(False, False, -1)
+[[0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 1 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 1 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 1 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 1 1 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]]
+turning right...
+-54.996708682344874
+done turning
+after turn heading: 0 id: 1932199296
+pos: {'x': -120.0, 'y': 40.00446796417236, 'z': 0}, heading: 0, add: [0.0, 0.004467964172363281]
+pos: {'x': -120.0, 'y': 42.00744390487671, 'z': 0}, heading: 0, add: [0.0, 2.0029759407043457]
+pos: {'x': -120.0, 'y': 44.010465145111084, 'z': 0}, heading: 0, add: [0.0, 2.003021240234375]
+pos: {'x': -120.0, 'y': 46.01417541503906, 'z': 0}, heading: 0, add: [0.0, 2.0037102699279785]
+pos: {'x': -120.0, 'y': 48.01807641983032, 'z': 0}, heading: 0, add: [0.0, 2.0039010047912598]
+pos: {'x': -120.0, 'y': 50.021865367889404, 'z': 0}, heading: 0, add: [0.0, 2.003788948059082]
+pos: {'x': -120.0, 'y': 52.02558994293213, 'z': 0}, heading: 0, add: [0.0, 2.0037245750427246]
+pos: {'x': -120.0, 'y': 54.02932405471802, 'z': 0}, heading: 0, add: [0.0, 2.0037341117858887]
+pos: {'x': -120.0, 'y': 56.03322505950928, 'z': 0}, heading: 0, add: [0.0, 2.0039010047912598]
+pos: {'x': -120.0, 'y': 58.036980628967285, 'z': 0}, heading: 0, add: [0.0, 2.003755569458008]
+pos: {'x': -120.0, 'y': 60.04066467285156, 'z': 0}, heading: 0, add: [0.0, 2.0036840438842773]
+pos: {'x': -120.0, 'y': 62.04482316970825, 'z': 0}, heading: 0, add: [0.0, 2.0041584968566895]
+pos: {'x': -120.0, 'y': 64.04873132705688, 'z': 0}, heading: 0, add: [0.0, 2.003908157348633]
+pos: {'x': -120.0, 'y': 66.05244159698486, 'z': 0}, heading: 0, add: [0.0, 2.0037102699279785]
+pos: {'x': -120.0, 'y': 68.05608749389648, 'z': 0}, heading: 0, add: [0.0, 2.003645896911621]
+pos: {'x': -120.0, 'y': 70.05980491638184, 'z': 0}, heading: 0, add: [0.0, 2.0037174224853516]
+heading in main: 0 id: 1932199296
+pos: {'x': -120.0, 'y': 73.83243799209595, 'z': 0}, heading: 0, add: [0.0, 3.7726330757141113]
+gap. 
+IR hazard detected!
+EM hazard detected!
+turn point
+walls:  [0, 1, False, 2]
+not right turn add some more code
+heading in main: 0 id: 1932199296
+pos: {'x': -120.0, 'y': 199.87993240356445, 'z': 0}, heading: 0, add: [0.0, 126.0474944114685]
+correction:  0.30, distance:  7.70, angle:  9.88
+IR hazard detected!
+EM hazard detected!
+heading in main: 0 id: 1932199296
+pos: {'x': -120.0, 'y': 205.1958703994751, 'z': 0}, heading: 0, add: [0.0, 5.3159379959106445]
+correction:  0.24, distance:  8.28, angle:  4.92
+IR hazard detected!
+EM hazard detected!
+heading in main: 0 id: 1932199296
+pos: {'x': -120.0, 'y': 209.59683895111084, 'z': 0}, heading: 0, add: [0.0, 4.400968551635742]
+IR hazard detected!
+EM hazard detected!
+turn point
+walls:  [0, 1, False, 1]
+right turn
+pos: {'x': -120.0, 'y': 209.60023403167725, 'z': 0}, heading: 0, add: [0.0, 0.00339508056640625]
+pos: {'x': -120.0, 'y': 211.60318613052368, 'z': 0}, heading: 0, add: [0.0, 2.0029520988464355]
+pos: {'x': -120.0, 'y': 213.60618352890015, 'z': 0}, heading: 0, add: [0.0, 2.002997398376465]
+pos: {'x': -120.0, 'y': 215.6097149848938, 'z': 0}, heading: 0, add: [0.0, 2.0035314559936523]
+pos: {'x': -120.0, 'y': 217.6132583618164, 'z': 0}, heading: 0, add: [0.0, 2.0035433769226074]
+pos: {'x': -120.0, 'y': 219.61747407913208, 'z': 0}, heading: 0, add: [0.0, 2.004215717315674]
+{'x': -120.0, 'y': 219.61747407913208, 'z': 0}
+before turn heading: 0 id: 1932199296
+{'x': -120.0, 'y': 219.61747407913208, 'z': 0}
+{'x': -120, 'y': 200, 'z': 0}
+[[0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 1 1 1 1 1 0 0]
+ [0 0 0 0 0 0 0 0 1 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 1 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 1 1 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]]
+turning right...
+-106.2205555610339
+done turning
+after turn heading: 90 id: 1932199296
+pos: {'x': -119.99665975570679, 'y': 200.0, 'z': 0}, heading: 90, add: [0.0033402442932128906, 0.0]
+pos: {'x': -117.99355745315552, 'y': 200.0, 'z': 0}, heading: 90, add: [2.0031023025512695, 0.0]
+pos: {'x': -115.99052906036377, 'y': 200.0, 'z': 0}, heading: 90, add: [2.003028392791748, 0.0]
+pos: {'x': -113.98688793182373, 'y': 200.0, 'z': 0}, heading: 90, add: [2.003641128540039, 0.0]
+pos: {'x': -111.98322296142578, 'y': 200.0, 'z': 0}, heading: 90, add: [2.003664970397949, 0.0]
+pos: {'x': -109.97933864593506, 'y': 200.0, 'z': 0}, heading: 90, add: [2.0038843154907227, 0.0]
+pos: {'x': -107.97610998153687, 'y': 200.0, 'z': 0}, heading: 90, add: [2.0032286643981934, 0.0]
+pos: {'x': -105.97310781478882, 'y': 200.0, 'z': 0}, heading: 90, add: [2.003002166748047, 0.0]
+pos: {'x': -103.9701247215271, 'y': 200.0, 'z': 0}, heading: 90, add: [2.0029830932617188, 0.0]
+pos: {'x': -101.9671368598938, 'y': 200.0, 'z': 0}, heading: 90, add: [2.002987861633301, 0.0]
+pos: {'x': -99.96407270431519, 'y': 200.0, 'z': 0}, heading: 90, add: [2.0030641555786133, 0.0]
+pos: {'x': -97.96102523803711, 'y': 200.0, 'z': 0}, heading: 90, add: [2.003047466278076, 0.0]
+pos: {'x': -95.95800876617432, 'y': 200.0, 'z': 0}, heading: 90, add: [2.003016471862793, 0.0]
+pos: {'x': -93.954336643219, 'y': 200.0, 'z': 0}, heading: 90, add: [2.0036721229553223, 0.0]
+pos: {'x': -91.95004940032959, 'y': 200.0, 'z': 0}, heading: 90, add: [2.0042872428894043, 0.0]
+pos: {'x': -89.9457335472107, 'y': 200.0, 'z': 0}, heading: 90, add: [2.0043158531188965, 0.0]
+heading in main: 90 id: 1932199296
+pos: {'x': -86.09567165374756, 'y': 200.0, 'z': 0}, heading: 90, add: [3.8500618934631348, 0.0]
+IR hazard detected!
+EM hazard detected!
+turn point
+walls:  [0, 1, True, 2]
+front wall
+left turn
+before turn heading: 90 id: 1932199296
+{'x': -86.09567165374756, 'y': 200.0, 'z': 0}
+{'x': -80, 'y': 200, 'z': 0}
+range(False, True)
+[[0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 1 1 1 1 1 0 0]
+ [0 0 0 0 0 0 0 0 1 0 0 0 1 0 0]
+ [0 0 0 0 0 0 0 0 1 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 1 1 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]]
+turning left...
+140.46286881589117
+done turning
+after turn heading: 0 id: 1932199296
+heading in main: 0 id: 1932199296
+pos: {'x': -80.0, 'y': 325.3342795372009, 'z': 0}, heading: 0, add: [0.0, 125.33427953720093]
+correction: -0.12, distance: -2.07, angle: -4.92
+IR hazard detected!
+EM hazard detected!
+heading in main: 0 id: 1932199296
+pos: {'x': -80.0, 'y': 400.6943154335022, 'z': 0}, heading: 0, add: [0.0, 75.36003589630127]
+correction: -0.05, distance: -2.65, angle:  0.00
+IR hazard detected!
+EM hazard detected!
+heading in main: 0 id: 1932199296
+pos: {'x': -80.0, 'y': 404.60612297058105, 'z': 0}, heading: 0, add: [0.0, 3.9118075370788574]
+correction:  0.03, distance: -2.07, angle:  4.92
+IR hazard detected!
+EM hazard detected!
+heading in main: 0 id: 1932199296
+pos: {'x': -80.0, 'y': 409.08066749572754, 'z': 0}, heading: 0, add: [0.0, 4.474544525146484]
+correction: -0.03, distance: -1.50, angle:  0.00
+IR hazard detected!
+EM hazard detected!
+heading in main: 0 id: 1932199296
+pos: {'x': -80.0, 'y': 412.9138994216919, 'z': 0}, heading: 0, add: [0.0, 3.8332319259643555]
+correction: -0.03, distance: -1.50, angle:  0.00
+IR hazard detected!
+EM hazard detected!
+heading in main: 0 id: 1932199296
+pos: {'x': -80.0, 'y': 416.83303594589233, 'z': 0}, heading: 0, add: [0.0, 3.9191365242004395]
+correction: -0.09, distance: -0.93, angle: -4.92
+IR hazard detected!
+EM hazard detected!
+heading in main: 0 id: 1932199296
+pos: {'x': -80.0, 'y': 420.72670221328735, 'z': 0}, heading: 0, add: [0.0, 3.8936662673950195]
+correction:  0.06, distance: -0.93, angle:  4.92
+IR hazard detected!
+EM hazard detected!
+heading in main: 0 id: 1932199296program ended
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+0,0,0,0,0,0,0,0,1,1,1,1,1,0,0
+0,0,0,0,0,0,0,0,1,0,0,0,1,0,0
+0,0,0,0,0,0,0,0,1,0,0,0,0,0,0
+0,0,0,0,0,0,0,5,1,0,0,0,0,0,0
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+done
+>>> 
+KeyboardInterrupt
+>>> 
+KeyboardInterrupt
+>>> c
+KeyboardInterrupt
+>>> 

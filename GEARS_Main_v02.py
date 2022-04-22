@@ -25,17 +25,21 @@ try:
  
         # STRAIGHT WALL FOLLOWING
         intersection = d.driveSingleWall(wallSensorData)    # follows wall and returns check for interesection
-        IMU.detectHazards()                                 # check for IR & EM hazards
+        hazard = IMU.detectHazards()                        # check for IR & EM hazards, assuming hazards are in front
+
 
         # TURNING
-        if intersection: # Do turn stuff
+        if intersection or hazard: # Do turn stuff
             print("turn point")
             wallSensorData = IMU.updateWallSensors()        # get more sensor data (make sure there's a wall)
+            wallSensorData[0] *= not hazard                 # treat hazard as a wall in front
             d.turnPoint(wallSensorData, heading)            # do turn point stuff based on wall data
-                
+            t0 = time.time()                                # reset time so it doesn't count the time it took to turn
+            
         print('heading in main: {} id: {}'.format(heading[0], id(heading))) # check heading
         IMU.distanceUpdate(speed,rdt,heading[0])            # update the pos vector (DOING WEIRD STUFF SOMETIMES???)
 
+        
         time.sleep(dT)              # time management
         rdt = time.time() - t0
         t0 = time.time()

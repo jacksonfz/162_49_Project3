@@ -31,8 +31,8 @@ BP.set_sensor_type(sonarPortF, BP.SENSOR_TYPE.EV3_ULTRASONIC_CM) # Configure for
 
 sonarPortR1 = 2 # right front
 sonarPortR2 = 4 # right back
-sonarPortL1 = 7 # left front
-sonarPortL2 = 0 # left back
+sonarPortL1 = 7 # left front THIS ONE EXISTS
+sonarPortL2 = 0 # left back NOT EXIST
 
 sensorDistance = 13.4 # cm between sensors
 targetWallOffset = 10 # cm
@@ -56,8 +56,8 @@ pTurn = 0.02
 dTurn = 0.015
 
 # HAZARD DETECTION
-irDetectionThreshold = 20
-magDetectionThreshold = 100
+irDetectionThreshold = 50
+magDetectionThreshold = 300
 
 #INITIALIZE STUFF
 

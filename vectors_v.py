@@ -135,7 +135,7 @@ def distanceUpdate(speed, timeStep, heading):
 #     return(0, s1, s2, s3) #first spot isn't used for easy indexing
 
 wall = [0,0,0,0] #first spot isn't used for easy indexing
-def detectWall(sensorData):
+def detectWall(sensorData): # for 3 sesnors
     for i in range(1,len(sensorData)): # for 3 walls (0, l, c ,r)
         if sensorData[i] < wallCalibration:
             wall[i] = True
@@ -143,10 +143,11 @@ def detectWall(sensorData):
             wall[i] = False
     return wall
 
-def checkWall(sensorData): # for more sensors
+def checkWall(sensorData): # for 5 sensors
     wall[2] = sensorData[0] < wallCalibration # front
-    wall[1] = (sensorData[3] < wallCalibration) + (sensorData[4] < wallCalibration) # left
-    wall[3] = (sensorData[1] < wallCalibration) + (sensorData[2] < wallCalibration) # left
+    wall[1] = (sensorData[3] < wallCalibration) #+ (sensorData[4] < wallCalibration) # left
+    wall[3] = (sensorData[1] < wallCalibration) + (sensorData[2] < wallCalibration) # right
+    # sensor l2 doesn't exist
     return(wall)
 
 
@@ -252,7 +253,11 @@ def detectHazards():
     magLen = length(magVec)
 
     if avg > irDetectionThreshold:
+        hazard = True
         print("IR hazard detected!")
     if magLen > magDetectionThreshold:
+        hazard = True
         print("EM hazard detected!")
+    else: hazard = False
     # Need to figure out how to do loggin in a way that it doesn't log the same hazard many times
+    return(hazard)
