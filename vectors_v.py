@@ -211,7 +211,7 @@ def updateWallSensors(): # for 5 sensors
         sf = float("NAN")
         print(error)
     #sf = 50
-    return(sf, sr1, sr2, sl1, sl2)
+    return([sf, sr1, sr2, sl1, sl2])
 
 
 
@@ -244,6 +244,7 @@ def fixPos():
 
 #%% HAZARDS DETECTION
 from IR_Functions import * # import these (from example code)
+# import GEARS_Mapping as m # for hazard logging
 IR_setup(grovepi) # it needs grovepi as an argument idk why
 
 def detectHazards():    
@@ -253,11 +254,15 @@ def detectHazards():
     magLen = length(magVec)
 
     if avg > irDetectionThreshold:
-        hazard = True
-        print("IR hazard detected!")
-    if magLen > magDetectionThreshold:
-        hazard = True
-        print("EM hazard detected!")
-    else: hazard = False
+        hazard = avg
+        hazardType = "heat"
+        print("IR hazard detected! Value = ", avg)
+    elif magLen > magDetectionThreshold:
+        hazard = magLen
+        hazardType = "magnet"
+        print("EM hazard detected! Value = ", magLen)
+    else:
+        hazard = False
+        hazardType = "none"
     # Need to figure out how to do loggin in a way that it doesn't log the same hazard many times
-    return(hazard)
+    return(hazard, hazardType)

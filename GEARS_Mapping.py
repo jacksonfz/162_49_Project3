@@ -24,6 +24,8 @@ def logPoint(x, y, value):
     # print(map)
 
 def logHazard(type, pos, data):
+    pos[0] += 1 * round(sin(heading[0] * pi / 180), 3)
+    pos[1] += 1 * round(cos(heading[0] * pi / 180), 3)
     if type == "heat": 
         value = heat
         parameter = "Radiated Power (W)"
@@ -32,7 +34,8 @@ def logHazard(type, pos, data):
         parameter = "Feild Strength (uT)"
     logPoint(pos, value)
     hazards.append([type, parameter,data, pos[0], pos[1]])
-    
+    print("hazard logged")
+      
 def saveMap(fileName, array):
     logPoint(0,0,start)
     fid = open(fileName + "_map.csv", "w") # add check if file exists so it doesn't overwrite

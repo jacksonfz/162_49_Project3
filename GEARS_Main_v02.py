@@ -25,8 +25,9 @@ try:
  
         # STRAIGHT WALL FOLLOWING
         intersection = d.driveSingleWall(wallSensorData)    # follows wall and returns check for interesection
-        hazard = IMU.detectHazards()                        # check for IR & EM hazards, assuming hazards are in front
-
+        #print(IMU.detectHazards())
+        hazard, hazardType = IMU.detectHazards()                        # check for IR & EM hazards, assuming hazards are in front
+        #print("hazard: ", hazard)                                                            # returns hazard value
 
         # TURNING
         if intersection or hazard: # Do turn stuff
@@ -44,8 +45,10 @@ try:
         rdt = time.time() - t0
         t0 = time.time()
         
-except KeyboardInterrupt:
+except KeyboardInterrupt or d.customError:
+        print("ending loop")
         d.drive(0,0)
+        dropCargo()
         d.end()
         m.saveMap("test", m.map)
         m.saveHazards("test", m.hazards)

@@ -176,8 +176,12 @@ def driveSingleWall(sensorData): # follow right wall with 2 sensors
     else: print("not driving. This shouldn't happen")
     return (gap) # if true should check for turns
 
-# drive
+# to make breaking the loop easier use exceptions
+class customError(Exception):
+    pass
+
 def turnPoint(sensorData, heading): # Does turn and map logging stuff
+    print("new sensor data: ", sensorData)
     walls = IMU.checkWall(sensorData)
     print("walls: ", walls)
     if walls[3] and walls[1] and walls[2]: # if there's walls on all 3 sides
@@ -186,10 +190,17 @@ def turnPoint(sensorData, heading): # Does turn and map logging stuff
         # First do map stuff
         point = IMU.fixPos()
         m.logPath(point)
+        print("in turn point hazard: ", hazard)  
+        if hazard: m.logHazard(hazardType, point, hazard)
         
         turnTime(-180)                          # CHECK TURN CONSTANT!!!!!!!!!!!  
         heading[0] -= 180                       # Its a list because it works
         driveDistance(30,speed,heading[0])      # Drive forward after turn
+    elif not walls[1] and not walls[2] and not walls[3]: # out of the maze
+        print("exiting the maze")
+        driveDistance(30, speed, heading[0])
+        raise customError("Reached the end of the maze")
+
 
     elif walls[3] < 2: # no wall to the right
         print("right turn")
@@ -199,8 +210,9 @@ def turnPoint(sensorData, heading): # Does turn and map logging stuff
         # DO MAP UPDATE STUFF HERE WHILE STOPPED
         point = IMU.fixPos()
         m.logPath(point)
+        if hazard: m.logHazard(hazardType, pos, hazard)
         
-        turnTime(85)
+        turnTime(80)
         heading[0] += 90 # Its a list because it works
         print('after turn heading: {} id: {}'.format(heading[0], id(heading)))
         time.sleep(dT)
@@ -215,6 +227,8 @@ def turnPoint(sensorData, heading): # Does turn and map logging stuff
         print('before turn heading: {} id: {}'.format(heading[0], id(heading)))
         point = IMU.fixPos()
         m.logPath(point)
+        if hazard: m.logHazard(hazardType, point, hazard)
+        
         turnTime(-85)
         heading[0] -= 90 # Its a list because it works
         print('after turn heading: {} id: {}'.format(heading[0], id(heading)))

@@ -56,8 +56,11 @@ pTurn = 0.02
 dTurn = 0.015
 
 # HAZARD DETECTION
-irDetectionThreshold = 50
+irDetectionThreshold = 90
 magDetectionThreshold = 300
+hazard = 0 # just initialize it
+hazardType = 0
+
 
 #INITIALIZE STUFF
 
