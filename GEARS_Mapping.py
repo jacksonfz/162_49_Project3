@@ -1,6 +1,6 @@
 # from GEARS_Setup import *
 import numpy as np
-
+from math import sin, cos, pi
 
 # MAPPING FUNCTIONS
 mapSize = 15
@@ -23,17 +23,21 @@ def logPoint(x, y, value):
     map[x + origin[0], y + origin[0]] = int(value)
     # print(map)
 
-def logHazard(type, pos, data):
-    pos[0] += 1 * round(sin(heading[0] * pi / 180), 3)
-    pos[1] += 1 * round(cos(heading[0] * pi / 180), 3)
-    if type == "heat": 
+def logHazard(typeh, pos, data, heading):
+    pos = list(pos)
+    pos[0] += 1 * round(sin(heading * pi / 180), 3)
+    pos[1] += 1 * round(cos(heading * pi / 180), 3)
+    if typeh == "heat": 
         value = heat
         parameter = "Radiated Power (W)"
-    if type == "magnet": 
+    elif typeh == "magnet": 
         value = magnet
         parameter = "Feild Strength (uT)"
-    logPoint(pos, value)
-    hazards.append([type, parameter,data, pos[0], pos[1]])
+    else:
+        value = 9
+        parameter = "unknown"
+    logPoint(int(pos[0]), int(pos[1]), value)
+    hazards.append([typeh, parameter,data, pos[0], pos[1]])
     print("hazard logged")
       
 def saveMap(fileName, array):

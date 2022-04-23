@@ -24,6 +24,9 @@ def mag(): #reads magnet sensor
     mag = mpu9250.readMagnet()
     return(mag)
 
+
+#magBaseline = length(mag())
+
 #%% MATH FUNCTIONS
 
 def vec0(): #an empty 0 vector dictionary
@@ -68,6 +71,9 @@ def add(vector1, vector2): # adds 2 vectors component-wise
 def printVec(vector):
     print("Vector: <{0:3.4}, {1:3.4}, {2:3.4}> Length: {3:3.4}".format(\
     float(vector["x"]), float(vector["y"]), float(vector["z"]), float(length(vector))))
+
+print("mag  baseline: ")
+printVec(mag())
 
 #%% UPDATE LOOPS
 
@@ -261,6 +267,7 @@ def detectHazards():
         hazard = magLen
         hazardType = "magnet"
         print("EM hazard detected! Value = ", magLen)
+        IMU.printVec(magVec)
     else:
         hazard = False
         hazardType = "none"

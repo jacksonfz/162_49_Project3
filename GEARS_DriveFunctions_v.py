@@ -180,10 +180,12 @@ def driveSingleWall(sensorData): # follow right wall with 2 sensors
 class customError(Exception):
     pass
 
-def turnPoint(sensorData, heading): # Does turn and map logging stuff
+backUpDistance = 20 # won't do full distance becasue of start/stop delay
+def turnPoint(sensorData, heading, hazard, hazardType): # Does turn and map logging stuff
     print("new sensor data: ", sensorData)
     walls = IMU.checkWall(sensorData)
     print("walls: ", walls)
+    print("hazard: ", hazard)
     if walls[3] and walls[1] and walls[2]: # if there's walls on all 3 sides
         print("turn around")
         
@@ -191,12 +193,17 @@ def turnPoint(sensorData, heading): # Does turn and map logging stuff
         point = IMU.fixPos()
         m.logPath(point)
         print("in turn point hazard: ", hazard)  
-        if hazard: m.logHazard(hazardType, point, hazard)
-        
+        if hazard:
+            m.logHazard(hazardType, point, hazard, heading[0])
+            print("backing up...")
+            driveSpeed(speed, 0)
+            time.sleep(backUpDistance/speed)
+            drive(0,0)
+                            
         turnTime(-180)                          # CHECK TURN CONSTANT!!!!!!!!!!!  
         heading[0] -= 180                       # Its a list because it works
         driveDistance(30,speed,heading[0])      # Drive forward after turn
-    elif not walls[1] and not walls[2] and not walls[3]: # out of the maze
+    elif not walls[1] and not walls[2] and walls[3] < 2: # out of the maze
         print("exiting the maze")
         driveDistance(30, speed, heading[0])
         raise customError("Reached the end of the maze")
@@ -204,15 +211,20 @@ def turnPoint(sensorData, heading): # Does turn and map logging stuff
 
     elif walls[3] < 2: # no wall to the right
         print("right turn")
-        driveDistance(10, speed, heading[0])
+        driveDistance(10, -1 * speed, heading[0])
         drive(0,0)
 
         # DO MAP UPDATE STUFF HERE WHILE STOPPED
         point = IMU.fixPos()
         m.logPath(point)
-        if hazard: m.logHazard(hazardType, pos, hazard)
-        
-        turnTime(80)
+        if hazard:
+            m.logHazard(hazardType, point, hazard, heading[0])
+            print("backing up...")
+            driveSpeed(-1 * speed, 0)
+            time.sleep(backUpDistance/speed)
+            drive(0,0)
+
+        turnTime(85)
         heading[0] += 90 # Its a list because it works
         print('after turn heading: {} id: {}'.format(heading[0], id(heading)))
         time.sleep(dT)
@@ -227,9 +239,15 @@ def turnPoint(sensorData, heading): # Does turn and map logging stuff
         print('before turn heading: {} id: {}'.format(heading[0], id(heading)))
         point = IMU.fixPos()
         m.logPath(point)
-        if hazard: m.logHazard(hazardType, point, hazard)
+        if hazard:
+            m.logHazard(hazardType, point, hazard, heading[0])
+            print("backing up...")
+            driveSpeed(-1 * speed, 0)
+            time.sleep(backUpDistance/speed)
+            drive(0,0)
+
         
-        turnTime(-85)
+        turnTime(-90)
         heading[0] -= 90 # Its a list because it works
         print('after turn heading: {} id: {}'.format(heading[0], id(heading)))
         time.sleep(dT)

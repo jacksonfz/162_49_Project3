@@ -50,16 +50,17 @@ ultrasonicCalibration = 1.15 #
 EV3ultrasonicCalibration = 1
 sensorOffset = 25 / 2 # distance from CoM in cm
 hallWidth = 40 # cm
-wallCalibration = 15 # distance to detect walls, cm
+wallCalibration = 16 # distance to detect walls, cm
 
 pTurn = 0.02
 dTurn = 0.015
 
 # HAZARD DETECTION
-irDetectionThreshold = 90
-magDetectionThreshold = 300
+irDetectionThreshold = 100
+magDetectionThreshold = 100
 hazard = 0 # just initialize it
 hazardType = 0
+
 
 
 #INITIALIZE STUFF
@@ -74,6 +75,7 @@ def lockCargo():
 
 
 def dropCargo():
+    print("dropping cargo")
     BP.set_motor_position(motorC, -60) # turn wheel
 
 
