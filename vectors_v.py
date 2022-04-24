@@ -257,17 +257,18 @@ def detectHazards():
     ir1, ir2 = IR_Read(grovepi)
     avg = (ir1 + ir2) / 2
     magVec = mag()
+    magComp = abs(magVec["z"])
     magLen = length(magVec)
-
+    printVec(magVec)
     if avg > irDetectionThreshold:
         hazard = avg
         hazardType = "heat"
         print("IR hazard detected! Value = ", avg)
-    elif magLen > magDetectionThreshold:
+    elif magComp > magDetection1: #magLen > magDetectionThreshold:
         hazard = magLen
         hazardType = "magnet"
         print("EM hazard detected! Value = ", magLen)
-        IMU.printVec(magVec)
+        printVec(magVec)
     else:
         hazard = False
         hazardType = "none"

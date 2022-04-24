@@ -58,6 +58,7 @@ dTurn = 0.015
 # HAZARD DETECTION
 irDetectionThreshold = 100
 magDetectionThreshold = 100
+magDetection1 = 100 # z component
 hazard = 0 # just initialize it
 hazardType = 0
 

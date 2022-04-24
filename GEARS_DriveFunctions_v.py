@@ -196,7 +196,7 @@ def turnPoint(sensorData, heading, hazard, hazardType): # Does turn and map logg
         if hazard:
             m.logHazard(hazardType, point, hazard, heading[0])
             print("backing up...")
-            driveSpeed(speed, 0)
+            driveSpeed(-1 * speed, 0)
             time.sleep(backUpDistance/speed)
             drive(0,0)
                             
@@ -211,7 +211,7 @@ def turnPoint(sensorData, heading, hazard, hazardType): # Does turn and map logg
 
     elif walls[3] < 2: # no wall to the right
         print("right turn")
-        driveDistance(10, -1 * speed, heading[0])
+        driveDistance(10, speed, heading[0])
         drive(0,0)
 
         # DO MAP UPDATE STUFF HERE WHILE STOPPED
