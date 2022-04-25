@@ -7,7 +7,7 @@ import GEARS_DriveFunctions_v as d # import drive control functions
 import GEARS_Mapping as m
 #from vectors_v import customError
 print("modules imported")
-time.sleep(0.5) # let the sensors warm up
+time.sleep(2) # let the sensors warm up
 
     
 # MAIN SCRIPT

@@ -40,7 +40,7 @@ targetWallOffset = 10 # cm
 
 #SETTING VARS
 # global dT
-dT = 0.2
+dT = 0.05
 centerOffsetThreshold = 4 # how far off center does robot need to be to react
 angleOffsetThreshold = 25 # how far off center does robot need to be to react
 speed = 10 # cm/s
@@ -50,7 +50,8 @@ ultrasonicCalibration = 1.15 #
 EV3ultrasonicCalibration = 1
 sensorOffset = 25 / 2 # distance from CoM in cm
 hallWidth = 40 # cm
-wallCalibration = 16 # distance to detect walls, cm
+wallCalibration = 20 # distance to detect walls, cm
+wallCalibrationRight = 16 # distance to detect walls, cm for only the right wall
 
 pTurn = 0.02
 dTurn = 0.015

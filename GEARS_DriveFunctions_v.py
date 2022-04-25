@@ -186,7 +186,7 @@ def turnPoint(sensorData, heading, hazard, hazardType): # Does turn and map logg
     walls = IMU.checkWall(sensorData)
     print("walls: ", walls)
     print("hazard: ", hazard)
-    if walls[3] and walls[1] and walls[2]: # if there's walls on all 3 sides
+    if walls[3] and walls[1] and walls[2]:                                      # turn around if there's walls on all 3 sides
         print("turn around")
         
         # First do map stuff
@@ -203,15 +203,40 @@ def turnPoint(sensorData, heading, hazard, hazardType): # Does turn and map logg
         turnTime(-180)                          # CHECK TURN CONSTANT!!!!!!!!!!!  
         heading[0] -= 180                       # Its a list because it works
         driveDistance(30,speed,heading[0])      # Drive forward after turn
-    elif not walls[1] and not walls[2] and walls[3] < 2: # out of the maze
-        print("exiting the maze")
-        driveDistance(30, speed, heading[0])
-        raise customError("Reached the end of the maze")
+    elif not walls[1] and not walls[2] and walls[3] < 2:                        # out of the maze
+        print("exiting the maze (probably)")
+        # driveDistance(30, speed, heading[0])
+    
+        driveDistance(13, speed, heading[0])
+        drive(0,0)
+
+        # DO MAP UPDATE STUFF HERE WHILE STOPPED
+        point = IMU.fixPos()
+        m.logPath(point)
+        
+        turnTime(75)
+        heading[0] += 90 # Its a list because it works
+        # print('after turn heading: {} id: {}'.format(heading[0], id(heading)))
+        time.sleep(dT)
+        driveDistance(30,speed,heading[0]) # Drive forward after turn
+    
+        print("checking if exited the maze...")
+        sensorData = IMU.updateWallSensors()
+        print("new sensor data: ", sensorData)
+        walls[1] = sensorData[3] < 30
+        walls[2] = sensorData[0] < 30
+        print("walls: ", walls)
+
+        if not walls[1] and not walls[2]: #check left and front bc there might be outside right
+            print("WE MADE IT OUT!")
+            m.logPoint(point[0], point[1], m.end)
+            raise customError("Reached the end of the maze")
+        else: print("nope still in the maze")
 
 
-    elif walls[3] < 2: # no wall to the right
+    elif walls[3] < 2:                                                          # no wall to the right
         print("right turn")
-        driveDistance(10, speed, heading[0])
+        driveDistance(13, speed, heading[0])
         drive(0,0)
 
         # DO MAP UPDATE STUFF HERE WHILE STOPPED
@@ -224,13 +249,13 @@ def turnPoint(sensorData, heading, hazard, hazardType): # Does turn and map logg
             time.sleep(backUpDistance/speed)
             drive(0,0)
 
-        turnTime(85)
+        turnTime(75)
         heading[0] += 90 # Its a list because it works
         print('after turn heading: {} id: {}'.format(heading[0], id(heading)))
         time.sleep(dT)
         driveDistance(30,speed,heading[0]) # Drive forward after turn
         
-    elif walls[2] == 1: # Need to turn left
+    elif walls[2] == 1:                                                     # Need to turn left
         print("front wall")
         print("left turn")
         drive(0,0)
@@ -255,7 +280,7 @@ def turnPoint(sensorData, heading, hazard, hazardType): # Does turn and map logg
 
         
     else:
-        print("not right turn add some more code")
+        print("not a valid turn add some more code")
 
 
 
