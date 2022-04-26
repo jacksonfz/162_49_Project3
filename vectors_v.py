@@ -7,7 +7,7 @@ NOTES
 from GEARS_Setup import *   # put all the settings in one place
 
 from MPU9250 import MPU9250
-from math import sqrt, sin, cos, pi, acos, asin
+from math import sqrt, sin, cos, pi, acos, asin, isnan
 mpu9250 = MPU9250()
 
 #%% SENSOR FUNCTIONS
@@ -130,7 +130,7 @@ def distanceUpdate(speed, timeStep, heading):
     pos["y"] += timeStep * speed * round(cos(heading * pi / 180), 3)
     # printVec(pos)
     add = [timeStep * speed * round(sin(heading * pi / 180), 3), timeStep * speed * round(cos(heading * pi / 180), 3)]
-    print("pos: {}, heading: {}, add: {}".format(pos, heading, add))
+    #print("pos: {}, heading: {}, add: {}".format(pos, heading, add))
 
 #%% OTHER SENSOR FUNCTIONS
 
@@ -152,7 +152,7 @@ def detectWall(sensorData): # for 3 sesnors
 def checkWall(sensorData): # for 5 sensors
     wall[2] = sensorData[0] < wallCalibration # front
     wall[1] = (sensorData[3] < wallCalibration) #+ (sensorData[4] < wallCalibration) # left
-    wall[3] = (sensorData[1] < wallCalibration) + (sensorData[2] < wallCalibration) # right
+    wall[3] = (sensorData[1] < wallCalibrationRight) + (sensorData[2] < wallCalibrationRight) # right
     # sensor l2 doesn't exist
     return(wall)
 
@@ -201,7 +201,9 @@ def wallPos(sensorData): # with 1 sensor on each size
 
     return(offset, theta, bool(error))
 
+sfprev = 0
 def updateWallSensors(): # for 5 sensors
+    global sfprev
     sr1 = grovepi.ultrasonicRead(sonarPortR1) * ultrasonicCalibration # right side sensor 1 distance 
     sr2 = grovepi.ultrasonicRead(sonarPortR2) * ultrasonicCalibration # center sensor distance
     try: #left side is optional
@@ -213,8 +215,13 @@ def updateWallSensors(): # for 5 sensors
 
     try: #front sensor
         sf = BP.get_sensor(sonarPortF) * EV3ultrasonicCalibration
+        print("frontSensor: ", sf)
+        sfprev = sf
+        if isnan(sfprev): sf = 40
+        if sf == 0: sf = 40
     except brickpi3.SensorError as error:
-        sf = float("NAN")
+        sf = 40 #float("NAN")
+        sfprev = float("NAN")
         print(error)
     #sf = 50
     return([sf, sr1, sr2, sl1, sl2])

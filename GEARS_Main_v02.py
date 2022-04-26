@@ -50,8 +50,8 @@ except KeyboardInterrupt:
         d.drive(0,0)
         dropCargo()
         d.end()
-        m.saveMap("test", m.map)
-        m.saveHazards("test", m.hazards)
+        m.saveMap("team_49", m.map)
+        m.saveHazards("team_49", m.hazards)
 except d.customError:
         print("ending loop")
         d.drive(0,0)

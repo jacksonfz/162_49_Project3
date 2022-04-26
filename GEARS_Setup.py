@@ -51,7 +51,7 @@ EV3ultrasonicCalibration = 1
 sensorOffset = 25 / 2 # distance from CoM in cm
 hallWidth = 40 # cm
 wallCalibration = 20 # distance to detect walls, cm
-wallCalibrationRight = 16 # distance to detect walls, cm for only the right wall
+wallCalibrationRight = 18 # distance to detect walls, cm for only the right wall
 
 pTurn = 0.02
 dTurn = 0.015

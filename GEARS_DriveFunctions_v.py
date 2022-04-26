@@ -180,7 +180,7 @@ def driveSingleWall(sensorData): # follow right wall with 2 sensors
 class customError(Exception):
     pass
 
-backUpDistance = 20 # won't do full distance becasue of start/stop delay
+backUpDistance = 15 # won't do full distance becasue of start/stop delay
 def turnPoint(sensorData, heading, hazard, hazardType): # Does turn and map logging stuff
     print("new sensor data: ", sensorData)
     walls = IMU.checkWall(sensorData)
@@ -200,7 +200,7 @@ def turnPoint(sensorData, heading, hazard, hazardType): # Does turn and map logg
             time.sleep(backUpDistance/speed)
             drive(0,0)
                             
-        turnTime(-180)                          # CHECK TURN CONSTANT!!!!!!!!!!!  
+        turnTime(-170)                          # CHECK TURN CONSTANT!!!!!!!!!!!  
         heading[0] -= 180                       # Its a list because it works
         driveDistance(30,speed,heading[0])      # Drive forward after turn
     elif not walls[1] and not walls[2] and walls[3] < 2:                        # out of the maze
@@ -249,7 +249,7 @@ def turnPoint(sensorData, heading, hazard, hazardType): # Does turn and map logg
             time.sleep(backUpDistance/speed)
             drive(0,0)
 
-        turnTime(75)
+        turnTime(80)
         heading[0] += 90 # Its a list because it works
         print('after turn heading: {} id: {}'.format(heading[0], id(heading)))
         time.sleep(dT)

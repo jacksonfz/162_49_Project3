@@ -3,9 +3,9 @@ import numpy as np
 from math import sin, cos, pi
 
 # MAPPING FUNCTIONS
-mapSize = 15
+mapSize = 21
 gridSize = 40
-origin = (7,7)
+origin = (10,10)
 map = np.zeros([mapSize, mapSize], dtype=np.int8)
 hazards = []
 
@@ -43,7 +43,7 @@ def logHazard(typeh, pos, data, heading):
 def saveMap(fileName, array):
     logPoint(0,0,start)
     fid = open(fileName + "_map.csv", "w") # add check if file exists so it doesn't overwrite
-    fid.write("Team: {} \nMap: {} \n Unit Length: {} \nUnit: {} \nOrigin: {} \nNotes{} \n\n".format(49, mapNumber, gridSize, "cm", origin, "Test map"))
+    fid.write("Team: {} \nMap: {} \nUnit Length: {} \nUnit: {} \nOrigin: {} \nNotes{} \n\n".format(49, mapNumber, gridSize, "cm", origin, "Test map"))
     formattedMap = str(array)                       # convert to string
     formattedMap = formattedMap.strip()             # remove extra spaces
     formattedMap = formattedMap.replace("\n ", "\n")
